@@ -10,12 +10,12 @@ Built as a hackathon project, PackPal supports role-based access, conflict alert
 
 🔑 Key Features
 
-- ✅ **Role-Based Access**: Owner, Admin, Member, Viewer
-- 📋 **Collaborative Checklists**: Organize items by category
-- 🚦 **Item Status Tracking**: To Pack, Packed, Delivered
-- 🔄 **Real-Time Updates**: Track who packed what, instantly
-- ⚠️ **Conflict Alerts**: Prevent duplicate items and assignments
-- 📊 **Progress Dashboard**: View status of team packing at a glance
+- ✅ Role-Based Access: Owner, Admin, Member, Viewer
+- 📋 Collaborative Checklists: Organize items by category
+- 🚦 Item Status Tracking: To Pack, Packed, Delivered
+- 🔄 Real-Time Updates: Track who packed what, instantly
+- ⚠️ Conflict Alerts: Prevent duplicate items and assignments
+- 📊 Progress Dashboard: View status of team packing at a glance
 
 ---
 
