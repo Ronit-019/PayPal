@@ -1,15 +1,14 @@
 
 
 ```markdown
-# 🧳 PackPal – Group Logistics Organizer
-
-**PackPal** is a collaborative web application designed to streamline event and travel packing by enabling teams to assign items, monitor packing progress, and work together in real-time.
+🧳 PackPal – Group Logistics Organizer
+PackPal is a collaborative web application designed to streamline event and travel packing by enabling teams to assign items, monitor packing progress, and work together in real-time.
 
 Built as a hackathon project, PackPal supports role-based access, conflict alerts, and real-time item status updates to ensure smooth group organization.
 
 ---
 
-## 🔑 Key Features
+🔑 Key Features
 
 - ✅ **Role-Based Access**: Owner, Admin, Member, Viewer
 - 📋 **Collaborative Checklists**: Organize items by category
@@ -20,7 +19,7 @@ Built as a hackathon project, PackPal supports role-based access, conflict alert
 
 ---
 
-## 💻 Tech Stack
+💻 Tech Stack
 
 | Layer     | Tech                                      |
 |-----------|-------------------------------------------|
@@ -31,7 +30,7 @@ Built as a hackathon project, PackPal supports role-based access, conflict alert
 
 ---
 
-## 📁 Project Structure
+📁 Project Structure
 
 ```
 PackPal/
@@ -52,9 +51,9 @@ PackPal/
 
 ---
 
-## 🛠️ Setup Instructions
+🛠️ Setup Instructions
 
-### 1. Clone the Repository
+1. Clone the Repository
 
 ```bash
 git clone https://github.com/your-username/packpal.git
@@ -63,7 +62,7 @@ cd packpal
 
 ---
 
-## 🧪 Sample Roles
+🧪 Sample Roles
 
 | Role   | Permissions                                |
 |--------|--------------------------------------------|
@@ -74,7 +73,7 @@ cd packpal
 
 ---
 
-## 🚀 Future Enhancements
+🚀 Future Enhancements
 
 - 🔔 Push Notifications
 - 📱 Mobile App (Flutter)
@@ -83,13 +82,13 @@ cd packpal
 
 ---
 
-## 👨‍💻 Author
+👨‍💻 Author
 
-**Made with 💙 at Tic-Tech_Toe Hackathon 2025**
+Made with 💙 at Tic-Tech_Toe Hackathon 2025
 
 ---
 
-## 📄 License
+📄 License
 
 This project is licensed under the MIT License.
 ```
