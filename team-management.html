@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Management - PackPal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --success-color: #4cc9f0;
+            --danger-color: #f72585;
+            --warning-color: #f8961e;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --gray-color: #6c757d;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f7fc;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e3e8ef;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--gray-color);
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background-color: #e9ecef;
+            color: var(--primary-color);
+        }
+
+        .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--dark-color);
+        }
+
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--dark-color);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #d90429;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--gray-color);
+            color: var(--gray-color);
+        }
+
+        .btn-outline:hover {
+            background-color: #e9ecef;
+        }
+
+        .btn-sm {
+            padding: 4px 8px;
+            font-size: 0.85rem;
+        }
+
+        /* User list styles */
+        .user-list {
+            width: 100%;
+        }
+
+        .user-list-desktop {
+            display: table;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .user-list-desktop thead {
+            background-color: #f4f7fc;
+        }
+
+        .user-list-desktop th,
+        .user-list-desktop td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e3e8ef;
+        }
+
+        .user-list-desktop th {
+            font-weight: 600;
+            color: var(--gray-color);
+        }
+
+        .user-list-mobile {
+            display: none;
+        }
+
+        .user-card {
+            border: 1px solid #e3e8ef;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .user-card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .user-card-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            row-gap: 10px;
+            column-gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .user-card-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #e3e8ef;
+            padding-top: 15px;
+        }
+
+        /* User profile styles */
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 600;
+        }
+
+        .user-email {
+            font-size: 0.875rem;
+            color: var(--gray-color);
+        }
+
+        /* Role badge styles */
+        .role-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .role-owner {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+        }
+
+        .role-admin {
+            background-color: rgba(76, 201, 240, 0.1);
+            color: var(--success-color);
+        }
+
+        .role-member {
+            background-color: rgba(248, 150, 30, 0.1);
+            color: var(--warning-color);
+        }
+
+        .role-viewer {
+            background-color: rgba(108, 117, 125, 0.1);
+            color: var(--gray-color);
+        }
+
+        /* Dropdown styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-toggle {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            min-width: 160px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            z-index: 1000;
+            display: none;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 10px 15px;
+            display: block;
+            text-decoration: none;
+            color: var(--dark-color);
+            transition: background-color 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: #e3e8ef;
+            margin: 5px 0;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalFadeIn 0.3s;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e3e8ef;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--gray-color);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #e3e8ef;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 120px;
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            border-radius: 4px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.75rem;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .user-list-desktop {
+                display: none;
+            }
+
+            .user-list-mobile {
+                display: block;
+            }
+
+            .user-card-details {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .navigation {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-suitcase-rolling"></i>
+                PackPal
+            </div>
+            <div class="navigation">
+<!--                <a href="#" class="nav-link">Event Dashboard</a>-->
+<!--                <a href="/checklist?event={{ event_name }}" class="nav-link">Packing Checklist</a>-->
+<!--                <a href="#" class="nav-link active">Team Management</a>-->
+                <a href="/dashboard?event={{ event_name }}" class="nav-link">Event Dashboard</a>
+                <a href="/checklist?event={{ event_name }}" class="nav-link">Packing Checklist</a>
+                <a href="/team?event={{ event_name }}" class="nav-link active">Team Management</a>
+            </div>
+        </header>
+
+        <h1 class="page-title">Team Management</h1>
+
+        <div class="card">
+            <div class="section-header">
+                <h2 class="section-title">Event Members</h2>
+                <!-- If current_user.role in ['Owner', 'Admin'] -->
+                <button id="invite-button" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i> Invite New Member
+                </button>
+                <!-- endif -->
+            </div>
+
+            <!-- Desktop view table -->
+            <div class="user-list user-list-desktop">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Role</th>
+                            <th>Assigned Items</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Sample user data -->
+                        <tr>
+                            <td>
+                                <div class="user-profile">
+                                    <div class="avatar" style="background-color: #4361ee;">AS</div>
+                                    <div class="user-info">
+                                        <span class="user-name">Alex Smith</span>
+                                        <span class="user-email">alex.smith@example.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="role-badge role-owner">Owner</span>
+                            </td>
+                            <td>12 items</td>
+                            <td>
+                                <!-- Owner cannot be modified -->
+                                <span class="tooltip">
+                                    <button class="btn btn-outline btn-sm" disabled>
+                                        <i class="fas fa-lock"></i> Owner
+                                    </button>
+                                    <span class="tooltip-text">Cannot modify the Owner</span>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="user-profile">
+                                    <div class="avatar" style="background-color: #4cc9f0;">JL</div>
+                                    <div class="user-info">
+                                        <span class="user-name">Jamie Lee</span>
+                                        <span class="user-email">jamie.lee@example.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="role-badge role-admin">Admin</span>
+                            </td>
+                            <td>8 items</td>
+                            <td>
+                                <!-- If current_user.role in ['Owner', 'Admin'] -->
+                                <div class="dropdown">
+                                    <button class="btn btn-outline btn-sm dropdown-toggle">
+                                        Manage <i class="fas fa-caret-down"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a href="#" class="dropdown-item change-role-btn" data-user="Jamie Lee">Change
+                                            Role</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a href="#" class="dropdown-item text-danger remove-user-btn"
+                                            data-user="Jamie Lee">Remove User</a>
+                                    </div>
+                                </div>
+                                <!-- endif -->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="user-profile">
+                                    <div class="avatar" style="background-color: #f8961e;">PJ</div>
+                                    <div class="user-info">
+                                        <span class="user-name">Pat Johnson</span>
+                                        <span class="user-email">pat.johnson@example.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="role-badge role-member">Member</span>
+                            </td>
+                            <td>5 items</td>
+                            <td>
+                                <!-- If current_user.role in ['Owner', 'Admin'] -->
+                                <div class="dropdown">
+                                    <button class="btn btn-outline btn-sm dropdown-toggle">
+                                        Manage <i class="fas fa-caret-down"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a href="#" class="dropdown-item change-role-btn" data-user="Pat Johnson">Change
+                                            Role</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a href="#" class="dropdown-item text-danger remove-user-btn"
+                                            data-user="Pat Johnson">Remove User</a>
+                                    </div>
+                                </div>
+                                <!-- endif -->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="user-profile">
+                                    <div class="avatar" style="background-color: #6c757d;">ST</div>
+                                    <div class="user-info">
+                                        <span class="user-name">Sam Taylor</span>
+                                        <span class="user-email">sam.taylor@example.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="role-badge role-viewer">Viewer</span>
+                            </td>
+                            <td>0 items</td>
+                            <td>
+                                <!-- If current_user.role in ['Owner', 'Admin'] -->
+                                <div class="dropdown">
+                                    <button class="btn btn-outline btn-sm dropdown-toggle">
+                                        Manage <i class="fas fa-caret-down"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a href="#" class="dropdown-item change-role-btn" data-user="Sam Taylor">Change
+                                            Role</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a href="#" class="dropdown-item text-danger remove-user-btn"
+                                            data-user="Sam Taylor">Remove User</a>
+                                    </div>
+                                </div>
+                                <!-- endif -->
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Mobile view cards -->
+            <div class="user-list user-list-mobile">
+                <!-- Sample user cards for mobile -->
+                <div class="user-card">
+                    <div class="user-card-header">
+                        <div class="avatar" style="background-color: #4361ee;">AS</div>
+                        <div class="user-info">
+                            <span class="user-name">Alex Smith</span>
+                            <span class="user-email">alex.smith@example.com</span>
+                        </div>
+                    </div>
+                    <div class="user-card-details">
+                        <div>
+                            <strong>Role:</strong>
+                            <span class="role-badge role-owner">Owner</span>
+                        </div>
+                        <div>
+                            <strong>Assigned Items:</strong>
+                            <span>12 items</span>
+                        </div>
+                    </div>
+                    <div class="user-card-actions">
+                        <!-- Owner cannot be modified -->
+                        <span class="tooltip">
+                            <button class="btn btn-outline btn-sm" disabled>
+                                <i class="fas fa-lock"></i> Owner
+                            </button>
+                            <span class="tooltip-text">Cannot modify the Owner</span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="user-card">
+                    <div class="user-card-header">
+                        <div class="avatar" style="background-color: #4cc9f0;">JL</div>
+                        <div class="user-info">
+                            <span class="user-name">Jamie Lee</span>
+                            <span class="user-email">jamie.lee@example.com</span>
+                        </div>
+                    </div>
+                    <div class="user-card-details">
+                        <div>
+                            <strong>Role:</strong>
+                            <span class="role-badge role-admin">Admin</span>
+                        </div>
+                        <div>
+                            <strong>Assigned Items:</strong>
+                            <span>8 items</span>
+                        </div>
+                    </div>
+                    <div class="user-card-actions">
+                        <!-- If current_user.role in ['Owner', 'Admin'] -->
+                        <div class="dropdown">
+                            <button class="btn btn-outline btn-sm dropdown-toggle">
+                                Manage <i class="fas fa-caret-down"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a href="#" class="dropdown-item change-role-btn" data-user="Jamie Lee">Change Role</a>
+                                <div class="dropdown-divider"></div>
+                                <a href="#" class="dropdown-item text-danger remove-user-btn"
+                                    data-user="Jamie Lee">Remove User</a>
+                            </div>
+                        </div>
+                        <!-- endif -->
+                    </div>
+                </div>
+
+                <div class="user-card">
+                    <div class="user-card-header">
+                        <div class="avatar" style="background-color: #f8961e;">PJ</div>
+                        <div class="user-info">
+                            <span class="user-name">Pat Johnson</span>
+                            <span class="user-email">pat.johnson@example.com</span>
+                        </div>
+                    </div>
+                    <div class="user-card-details">
+                        <div>
+                            <strong>Role:</strong>
+                            <span class="role-badge role-member">Member</span>
+                        </div>
+                        <div>
+                            <strong>Assigned Items:</strong>
+                            <span>5 items</span>
+                        </div>
+                    </div>
+                    <div class="user-card-actions">
+                        <!-- If current_user.role in ['Owner', 'Admin'] -->
+                        <div class="dropdown">
+                            <button class="btn btn-outline btn-sm dropdown-toggle">
+                                Manage <i class="fas fa-caret-down"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a href="#" class="dropdown-item change-role-btn" data-user="Pat Johnson">Change
+                                    Role</a>
+                                <div class="dropdown-divider"></div>
+                                <a href="#" class="dropdown-item text-danger remove-user-btn"
+                                    data-user="Pat Johnson">Remove User</a>
+                            </div>
+                        </div>
+                        <!-- endif -->
+                    </div>
+                </div>
+
+                <div class="user-card">
+                    <div class="user-card-header">
+                        <div class="avatar" style="background-color: #6c757d;">ST</div>
+                        <div class="user-info">
+                            <span class="user-name">Sam Taylor</span>
+                            <span class="user-email">sam.taylor@example.com</span>
+                        </div>
+                    </div>
+                    <div class="user-card-details">
+                        <div>
+                            <strong>Role:</strong>
+                            <span class="role-badge role-viewer">Viewer</span>
+                        </div>
+                        <div>
+                            <strong>Assigned Items:</strong>
+                            <span>0 items</span>
+                        </div>
+                    </div>
+                    <div class="user-card-actions">
+                        <!-- If current_user.role in ['Owner', 'Admin'] -->
+                        <div class="dropdown">
+                            <button class="btn btn-outline btn-sm dropdown-toggle">
+                                Manage <i class="fas fa-caret-down"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a href="#" class="dropdown-item change-role-btn" data-user="Sam Taylor">Change Role</a>
+                                <div class="dropdown-divider"></div>
+                                <a href="#" class="dropdown-item text-danger remove-user-btn"
+                                    data-user="Sam Taylor">Remove User</a>
+                            </div>
+                        </div>
+                        <!-- endif -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for changing role -->
+    <div id="change-role-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Change User Role</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Change role for <strong id="change-role-username">User</strong></p>
+                <div class="form-group">
+                    <label for="role-select" class="form-label">Select Role</label>
+                    <select id="role-select" class="form-select">
+                        <option value="admin">Admin</option>
+                        <option value="member">Member</option>
+                        <option value="viewer">Viewer</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Role Permissions:</label>
+                    <div id="role-permissions">
+                        <p><strong>Admin:</strong> Can manage users, edit checklist, assign items</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline modal-close-btn">Cancel</button>
+                <button class="btn btn-primary" id="save-role-btn">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for removing user -->
+    <div id="remove-user-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Remove User</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to remove <strong id="remove-user-username">User</strong> from this event?</p>
+                <div class="form-group">
+                    <label for="reassign-select" class="form-label">Reassign their items to:</label>
+                    <select id="reassign-select" class="form-select">
+                        <option value="">Select User</option>
+                        <option value="alex">Alex Smith</option>
+                        <option value="jamie">Jamie Lee</option>
+                        <option value="pat">Pat Johnson</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline modal-close-btn">Cancel</button>
+                <button class="btn btn-danger" id="confirm-remove-btn">Remove User</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for inviting new user -->
+    <div id="invite-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Invite New Member</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="invite-email" class="form-label">Email Address</label>
+                    <input type="email" id="invite-email" class="form-control" placeholder="Enter email address">
+                </div>
+                <div class="form-group">
+                    <label for="invite-role" class="form-label">Role</label>
+                    <select id="invite-role" class="form-select">
+                        <option value="member">Member</option>
+                        <option value="admin">Admin</option>
+                        <option value="viewer">Viewer</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Add a personal message (optional)</label>
+                    <textarea class="form-control" rows="3"
+                        placeholder="Write a message to include in the invitation email"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline modal-close-btn">Cancel</button>
+                <button class="btn btn-primary" id="send-invite-btn">Send Invitation</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+       // Sample data for the current user
+        const currentUser = {
+            name: 'Alex Smith',
+            role: 'Owner', // Options: Owner, Admin, Member, Viewer
+        };
+
+        // Sample data for team members
+        const teamMembers = [
+            {
+                name: 'Alex Smith',
+                email: 'alex@example.com',
+                role: 'Owner',
+                assignedItems: 12
+            },
+            {
+                name: 'Jamie Davis',
+                email: 'jamie@example.com',
+                role: 'Admin',
+                assignedItems: 8
+            },
+            {
+                name: 'Taylor Wilson',
+                email: 'taylor@example.com',
+                role: 'Member',
+                assignedItems: 15
+            },
+            {
+                name: 'Morgan Johnson',
+                email: 'morgan@example.com',
+                role: 'Member',
+                assignedItems: 6
+            },
+            {
+                name: 'Sam Parker',
+                email: 'sam@example.com',
+                role: 'Viewer',
+                assignedItems: 0
+            }
+        ];
+
+        // DOM elements
+        const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+        const changeRoleModal = document.getElementById('change-role-modal');
+        const removeUserModal = document.getElementById('remove-user-modal');
+        const reassignItemsModal = document.getElementById('reassign-items-modal');
+        const inviteModal = document.getElementById('invite-modal');
+        const changeRoleButtons = document.querySelectorAll('.change-role-btn');
+        const removeUserButtons = document.querySelectorAll('.remove-user-btn');
+        const inviteButton = document.getElementById('invite-button');
+        const modalCloseButtons = document.querySelectorAll('.modal-close, .modal-close-btn');
+        const roleSelect = document.getElementById('role-select');
+        const rolePermissions = document.getElementById('role-permissions');
+        const viewOnlyNotice = document.getElementById('view-only-notice');
+
+        // Current username being acted upon
+        let currentActionUser = '';
+        let currentActionRole = '';
+        let currentActionItems = 0;
+
+        // Initialize permissions based on current user role
+        document.addEventListener('DOMContentLoaded', function () {
+            // Show/hide view-only notice
+            if (currentUser.role === 'Member' || currentUser.role === 'Viewer') {
+                if (viewOnlyNotice) {
+                    viewOnlyNotice.style.display = 'flex';
+                }
+
+                // Hide all action buttons for non-admin users
+                document.querySelectorAll('.dropdown-toggle, .change-role-btn, .remove-user-btn').forEach(el => {
+                    el.style.display = 'none';
+                });
+
+                // Hide invite button
+                if (inviteButton) {
+                    inviteButton.style.display = 'none';
+                }
+            }
+
+            // For Admin users, disable actions on Owner and other Admin users
+            if (currentUser.role === 'Admin') {
+                teamMembers.forEach(member => {
+                    if (member.role === 'Owner' || member.role === 'Admin') {
+                        // Find and disable actions for this user
+                        document.querySelectorAll(`[data-user="${member.name}"]`).forEach(el => {
+                            el.style.display = 'none';
+                        });
+                    }
+                });
+            }
+        });
+
+        // Initialize dropdown toggles
+        dropdownToggles.forEach(toggle => {
+            toggle.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const dropdown = this.nextElementSibling;
+                dropdown.classList.toggle('show');
+            });
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function (e) {
+            const dropdowns = document.querySelectorAll('.dropdown-menu.show');
+            dropdowns.forEach(dropdown => {
+                if (!e.target.closest('.dropdown')) {
+                    dropdown.classList.remove('show');
+                }
+            });
+        });
+
+        // Handle change role buttons
+        changeRoleButtons.forEach(button => {
+            button.addEventListener('click', function (e) {
+                e.preventDefault();
+                currentActionUser = this.getAttribute('data-user');
+
+                // Find the user in our data
+                const userInfo = teamMembers.find(member => member.name === currentActionUser);
+                if (userInfo) {
+                    currentActionRole = userInfo.role;
+
+                    // Update modal UI
+                    if (changeRoleModal) {
+                        const userNameEl = changeRoleModal.querySelector('.user-name');
+                        if (userNameEl) userNameEl.textContent = currentActionUser;
+
+                        const currentRoleEl = changeRoleModal.querySelector('.current-role');
+                        if (currentRoleEl) currentRoleEl.textContent = currentActionRole;
+
+                        // Pre-select current role in dropdown
+                        if (roleSelect) {
+                            Array.from(roleSelect.options).forEach(option => {
+                                if (option.value === currentActionRole) {
+                                    option.selected = true;
+                                }
+                            });
+                        }
+
+                        // Show modal
+                        changeRoleModal.classList.add('show');
+                    }
+                }
+            });
+        });
+
+        // Handle remove user buttons
+        removeUserButtons.forEach(button => {
+            button.addEventListener('click', function (e) {
+                e.preventDefault();
+                currentActionUser = this.getAttribute('data-user');
+
+                // Find the user in our data
+                const userInfo = teamMembers.find(member => member.name === currentActionUser);
+                if (userInfo) {
+                    currentActionItems = userInfo.assignedItems;
+
+                    // Update modal UI
+                    if (removeUserModal) {
+                        const userNameEl = removeUserModal.querySelector('.user-name');
+                        if (userNameEl) userNameEl.textContent = currentActionUser;
+
+                        const userItemsEl = removeUserModal.querySelector('.user-items');
+                        if (userItemsEl) userItemsEl.textContent = currentActionItems;
+
+                        // Show modal
+                        removeUserModal.classList.add('show');
+                    }
+                }
+            });
+        });
+
+        // Handle invite button
+        if (inviteButton) {
+            inviteButton.addEventListener('click', function () {
+                if (inviteModal) {
+                    inviteModal.classList.add('show');
+                }
+            });
+        }
+
+        // Handle role changes in dropdown
+        if (roleSelect) {
+            roleSelect.addEventListener('change', function () {
+                const selectedRole = this.value;
+
+                // Update permissions info based on selected role
+                if (rolePermissions) {
+                    const permissions = {
+                        'Owner': [
+                            'Full control over the event',
+                            'Add/remove any user',
+                            'Change any user\'s role',
+                            'Edit all packing items',
+                            'Delete the event'
+                        ],
+                        'Admin': [
+                            'Add/remove members and viewers',
+                            'Change members\' and viewers\' roles',
+                            'Edit all packing items',
+                            'Cannot remove Owner or other Admins'
+                        ],
+                        'Member': [
+                            'Add and edit their own packing items',
+                            'View all team members',
+                            'Cannot change roles or remove users'
+                        ],
+                        'Viewer': [
+                            'View all packing lists and team members',
+                            'Cannot add or edit items',
+                            'Cannot change roles or remove users'
+                        ]
+                    };
+
+                    // Clear current permissions
+                    rolePermissions.innerHTML = '';
+
+                    // Add title
+                    const permTitle = document.createElement('h4');
+                    permTitle.textContent = `${selectedRole} Permissions:`;
+                    rolePermissions.appendChild(permTitle);
+
+                    // Add list of permissions
+                    const permList = document.createElement('ul');
+                    permissions[selectedRole].forEach(perm => {
+                        const li = document.createElement('li');
+                        li.textContent = perm;
+                        permList.appendChild(li);
+                    });
+                    rolePermissions.appendChild(permList);
+                }
+            });
+        }
+
+        // Handle confirm role change
+        const confirmRoleChangeBtn = document.getElementById('confirm-role-change');
+        if (confirmRoleChangeBtn) {
+            confirmRoleChangeBtn.addEventListener('click', function () {
+                const newRole = roleSelect.value;
+
+                // Check if user has assigned items and new role is Viewer
+                const userInfo = teamMembers.find(member => member.name === currentActionUser);
+                if (userInfo && userInfo.assignedItems > 0 && newRole === 'Viewer') {
+                    // Show reassign items modal
+                    if (reassignItemsModal) {
+                        const userNameEl = reassignItemsModal.querySelector('.user-name');
+                        if (userNameEl) userNameEl.textContent = currentActionUser;
+
+                        const userItemsEl = reassignItemsModal.querySelector('.user-items');
+                        if (userItemsEl) userItemsEl.textContent = userInfo.assignedItems;
+
+                        // Close current modal
+                        changeRoleModal.classList.remove('show');
+
+                        // Show reassign modal
+                        reassignItemsModal.classList.add('show');
+                    }
+                } else {
+                    // Simulate role change (in real app, this would be an API call)
+                    console.log(`Changed ${currentActionUser}'s role from ${currentActionRole} to ${newRole}`);
+
+                    // Update UI (in a real app, you might refresh the data)
+                    const roleCell = document.querySelector(`[data-user="${currentActionUser}"]`).closest('tr').querySelector('td:nth-child(2) .role-badge');
+                    if (roleCell) {
+                        roleCell.textContent = newRole;
+                        roleCell.className = `role-badge role-${newRole.toLowerCase()}`;
+                    }
+
+                    // Close modal
+                    changeRoleModal.classList.remove('show');
+                }
+            });
+        }
+
+        // Handle confirm remove user
+        const confirmRemoveUserBtn = document.getElementById('confirm-remove-user');
+        if (confirmRemoveUserBtn) {
+            confirmRemoveUserBtn.addEventListener('click', function () {
+                // Check if user has assigned items
+                const userInfo = teamMembers.find(member => member.name === currentActionUser);
+                if (userInfo && userInfo.assignedItems > 0) {
+                    // Show reassign items modal
+                    if (reassignItemsModal) {
+                        const userNameEl = reassignItemsModal.querySelector('.user-name');
+                        if (userNameEl) userNameEl.textContent = currentActionUser;
+
+                        const userItemsEl = reassignItemsModal.querySelector('.user-items');
+                        if (userItemsEl) userItemsEl.textContent = userInfo.assignedItems;
+
+                        // Close current modal
+                        removeUserModal.classList.remove('show');
+
+                        // Show reassign modal
+                        reassignItemsModal.classList.add('show');
+                    }
+                } else {
+                    // Simulate user removal (in real app, this would be an API call)
+                    console.log(`Removed user: ${currentActionUser}`);
+
+                    // Update UI (in a real app, you might refresh the data)
+                    const userRow = document.querySelector(`[data-user="${currentActionUser}"]`).closest('tr');
+                    if (userRow) {
+                        userRow.style.display = 'none';
+                    }
+
+                    // Update user card in mobile view
+                    const userCard = document.querySelector(`.team-card .user-name:contains('${currentActionUser}')`).closest('.team-card');
+                    if (userCard) {
+                        userCard.style.display = 'none';
+                    }
+
+                    // Close modal
+                    removeUserModal.classList.remove('show');
+                }
+            });
+        }
+
+        // Handle confirm reassign items
+        const confirmReassignBtn = document.getElementById('confirm-reassign');
+        if (confirmReassignBtn) {
+            confirmReassignBtn.addEventListener('click', function () {
+                const newAssignee = document.getElementById('reassign-select').value;
+
+                // Simulate item reassignment (in real app, this would be an API call)
+                console.log(`Reassigned ${currentActionItems} items from ${currentActionUser} to ${newAssignee}`);
+
+                // Update UI (in a real app, you might refresh the data)
+                // For the removed user scenario
+                const userRow = document.querySelector(`[data-user="${currentActionUser}"]`).closest('tr');
+                if (userRow) {
+                    userRow.style.display = 'none';
+                }
+
+                // Update user card in mobile view
+                const userCard = document.querySelector(`.team-card .user-name:contains('${currentActionUser}')`).closest('.team-card');
+                if (userCard) {
+                    userCard.style.display = 'none';
+                }
+
+                // Update the assignee's item count
+                const assigneeInfo = teamMembers.find(member => member.name === newAssignee);
+                if (assigneeInfo) {
+                    assigneeInfo.assignedItems += currentActionItems;
+
+                    // Update the UI
+                    const assigneeItemBadge = document.querySelector(`tr:contains('${newAssignee}') .item-badge`);
+                    if (assigneeItemBadge) {
+                        assigneeItemBadge.textContent = `${assigneeInfo.assignedItems} items`;
+                    }
+                }
+
+                // Close modal
+                reassignItemsModal.classList.remove('show');
+            });
+        }
+
+        // Handle modal close buttons
+        modalCloseButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                // Find the parent modal
+                const modal = this.closest('.modal');
+                if (modal) {
+                    modal.classList.remove('show');
+                }
+            });
+        });
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function (e) {
+            const modals = document.querySelectorAll('.modal.show');
+            modals.forEach(modal => {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                }
+            });
+        });
+
+        // Handle invite form submission
+        const inviteForm = document.getElementById('invite-form');
+        if (inviteForm) {
+            inviteForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const email = document.getElementById('invite-email').value;
+                const role = document.getElementById('invite-role').value;
+
+                // Simulate invitation (in real app, this would be an API call)
+                console.log(`Invited ${email} as ${role}`);
+
+                // Clear form
+                document.getElementById('invite-email').value = '';
+
+                // Close modal
+                inviteModal.classList.remove('show');
+
+                // Show success message (you would need to add this element to your HTML)
+                const successAlert = document.createElement('div');
+                successAlert.className = 'alert alert-success';
+                successAlert.textContent = `Invitation sent to ${email}`;
+                document.querySelector('.page-header').after(successAlert);
+
+                // Remove success message after 3 seconds
+                setTimeout(() => {
+                    successAlert.remove();
+                }, 3000);
+            });
+        }
+
+        // Format for jQuery-like contains selector (used above)
+        if (!Element.prototype.matches) {
+            Element.prototype.matches = Element.prototype.msMatchesSelector ||
+                Element.prototype.webkitMatchesSelector;
+        }
+
+        if (!Element.prototype.closest) {
+            Element.prototype.closest = function (s) {
+                var el = this;
+                do {
+                    if (el.matches(s)) return el;
+                    el = el.parentElement || el.parentNode;
+                } while (el !== null && el.nodeType === 1);
+                return null;
+            };
+        }
+    </script>

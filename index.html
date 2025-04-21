@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PackPal - Your Group Packing Assistant</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fafafa;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Container */
+        .container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c7be5;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: #333;
+            font-weight: 400;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #2c7be5;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: #2c7be5;
+            color: white;
+            box-shadow: 0 4px 6px rgba(44, 123, 229, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: #1a68d1;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(44, 123, 229, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #2c7be5;
+            border: 2px solid #2c7be5;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(44, 123, 229, 0.1);
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            align-items: center;
+            padding: 80px 0;
+            min-height: 80vh;
+        }
+
+        .hero-content {
+            flex: 1;
+        }
+
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: #333;
+            line-height: 1.2;
+        }
+
+        .hero-title span {
+            color: #2c7be5;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 30px;
+            max-width: 550px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background-color: #f3f8ff;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            color: #333;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #2c7be5;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .feature-description {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 100px 0;
+        }
+
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+        }
+
+        .step {
+            flex: 1;
+            padding: 0 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 40px;
+            right: -30px;
+            width: 60px;
+            height: 2px;
+            background-color: #ddd;
+        }
+
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background-color: #e9f2ff;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c7be5;
+        }
+
+        .step-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .step-description {
+            color: #666;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #1e293b;
+            color: #fff;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .footer-description {
+            max-width: 300px;
+            margin-bottom: 20px;
+            color: #cbd5e1;
+        }
+
+        .footer-links h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #2c7be5;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(203, 213, 225, 0.2);
+            color: #cbd5e1;
+            font-size: 0.9rem;
+        }
+
+        /* Chat Bot Styles */
+        .chat-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .chat-button {
+            background-color: #2c7be5;
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(44, 123, 229, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .chat-button:hover {
+            background-color: #1a68d1;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(44, 123, 229, 0.4);
+        }
+
+        .chat-container {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            height: 500px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1001;
+        }
+
+        .chat-header {
+            background-color: #2c7be5;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .close-chat {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 75%;
+            padding: 12px 15px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .bot-message {
+            background-color: #f1f5f9;
+            color: #334155;
+            align-self: flex-start;
+            border-top-left-radius: 4px;
+        }
+
+        .user-message {
+            background-color: #2c7be5;
+            color: white;
+            align-self: flex-end;
+            border-top-right-radius: 4px;
+        }
+
+        .chat-form {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid #eaeaea;
+        }
+
+        .chat-input {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 1px solid #eaeaea;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .chat-input:focus {
+            border-color: #2c7be5;
+        }
+
+        .send-button {
+            background-color: #2c7be5;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-left: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+
+        .send-button:hover {
+            background-color: #1a68d1;
+        }
+
+        /* Quick Suggestions */
+        .quick-suggestions {
+            padding: 10px 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            border-top: 1px solid #eaeaea;
+        }
+
+        .suggestion-chip {
+            background-color: #f1f5f9;
+            color: #2c7be5;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #e2e8f0;
+        }
+
+        .suggestion-chip:hover {
+            background-color: #e2e8f0;
+        }
+
+        /* Media Queries */
+        @media (max-width: 992px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding: 60px 0;
+            }
+
+            .hero-image {
+                margin-top: 50px;
+                justify-content: center;
+            }
+
+            .hero-description {
+                margin: 0 auto 30px;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .steps {
+                flex-direction: column;
+                gap: 50px;
+            }
+
+            .step:not(:last-child)::after {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.3rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .chat-container {
+                width: 90%;
+                right: 5%;
+                left: 5%;
+                bottom: 90px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <div class="container">
+        <nav>
+            <a href="index.html" class="logo">Pack<span>Pal</span></a>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="/ai">AI Chat</a></li>
+                <li><a href="/settings">Settings</a></li>
+
+<!--                <li><a href="#">Pricing</a></li>-->
+
+<!--                <li><a href="login.html" class="btn btn-secondary">Login</a></li>-->
+<!--                <li><a href="signup.html" class="btn btn-primary">Sign Up</a></li>-->
+                <li><a href="/login" class="btn btn-secondary">Login</a></li>
+                <li><a href="/signup" class="btn btn-primary">Sign Up</a></li>
+
+            </ul>
+            <div class="mobile-menu">☰</div>
+        </nav>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Your <span>Group Packing</span> Assistant</h1>
+                <h2 class="hero-subtitle">Planning a trip together has never been easier</h2>
+                <p class="hero-description">Collaborate with your team to pack smarter and stay organized. Share
+                    responsibilities, track progress, and ensure nothing gets left behind.</p>
+                <div class="hero-buttons">
+<!--                    <a href="signup.html" class="btn btn-primary">Get Started - It's Free</a>-->
+                    <a href="/signup" class="btn btn-primary">Get Started - It's Free</a>
+                    <a href="#features" class="btn btn-secondary">Learn More</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="/api/placeholder/500/400" alt="PackPal App Interface">
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">What Makes PackPal Different</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">✅</div>
+                    <h3 class="feature-title">Collaborative Checklists</h3>
+                    <p class="feature-description">Create shared packing lists with your group. Assign items, add notes,
+                        and check off completed tasks in real-time.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3 class="feature-title">Role-Based Access</h3>
+                    <p class="feature-description">Control who can view or edit your lists with customizable roles:
+                        Owner, Admin, Member, or Viewer.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3 class="feature-title">Real-Time Updates</h3>
+                    <p class="feature-description">See changes instantly across all devices. No more duplicate items or
+                        missed essentials.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">Progress Tracking</h3>
+                    <p class="feature-description">Monitor completion status with visual dashboards to ensure your group
+                        stays on track.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How PackPal Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Create an Event</h3>
+                    <p class="step-description">Start by creating a new trip or event and invite your group members to
+                        join.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Add & Assign Items</h3>
+                    <p class="step-description">Build your checklist and assign responsibilities to different group
+                        members.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Track & Pack Together</h3>
+                    <p class="step-description">Monitor progress in real-time and ensure everything is packed before
+                        departure.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <a href="index.html" class="footer-logo">PackPal</a>
+                    <p class="footer-description">The smart way to organize group packing. Never forget essential items
+                        again.</p>
+                </div>
+                <div class="footer-links">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 PackPal. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chat Widget -->
+    <div class="chat-widget">
+        <button class="chat-button" id="chatButton">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+        </button>
+
+        <div class="chat-container" id="chatContainer">
+            <div class="chat-header">
+                <h3>PackPal Assistant</h3>
+                <button class="close-chat" id="closeChat">×</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will be added here -->
+            </div>
+            <div class="quick-suggestions" id="quickSuggestions">
+                <span class="suggestion-chip">How to create a trip?</span>
+                <span class="suggestion-chip">What items to pack for hiking?</span>
+                <span class="suggestion-chip">How to assign tasks?</span>
+            </div>
+            <form class="chat-form" id="chatForm">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Type your question..." required>
+                <button type="submit" class="send-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Simple mobile menu toggle functionality
+        document.addEventListener('DOMContentLoaded', function () {
+                // Mobile menu functionality
+                const mobileMenuButton = document.querySelector('.mobile-menu');
+                const navLinks = document.querySelector('.nav-links');
+
+                mobileMenuButton.addEventListener('click', function () {
+                    navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+                    if (navLinks.style.display === 'flex') {
+                        navLinks.style.flexDirection = 'column';
+                        navLinks.style.position = 'absolute';
+                        navLinks.style.top = '70px';
+                        navLinks.style.right = '0';
+                        navLinks.style.backgroundColor = '#fff';
+                        navLinks.style.width = '100%';
+                        navLinks.style.padding = '20px';
+                        navLinks.style.boxShadow = '0 10px 20px rgba(0,0,0,0.1)';
+                        navLinks.style.zIndex = '100';
+                    }
+                });
+
+                // Handle window resize to reset mobile menu
+                window.addEventListener('resize', function () {
+                    if (window.innerWidth > 768) {
+                        navLinks.style.display = 'flex';
+                        navLinks.style.flexDirection = 'row';
+                        navLinks.style.position = 'static';
+                        navLinks.style.padding = '0';
+                        navLinks.style.boxShadow = 'none';
+                    } else {
+                        navLinks.style.display = 'none';
+                    }
+                });
+
+                // Chat functionality
+                const chatButton = document.getElementById('chatButton');
+                const chatContainer = document.getElementById('chatContainer');
+                const closeChat = document.getElementById('closeChat');
+                const chatForm = document.getElementById('chatForm');
+                const chatInput = document.getElementById('chatInput');
+                const chatMessages = document.getElementById('chatMessages');
+                const quickSuggestions = document.getElementById('quickSuggestions');
+
+                // Chat toggle
+                chatButton.addEventListener('click', function () {
+                    chatContainer.style.display = 'flex';
+                    chatButton.style.display = 'none';
+                    // Show welcome message if first time opening
+                    if (chatMessages.children.length === 0) {
+                        addBotMessage("Hi there! 👋 I'm your PackPal Assistant. How can I help you with your group packing today?");
+                    }
+                });
+
+                closeChat.addEventListener('click', function () {
+                    chatContainer.style.display = 'none';
+                    chatButton.style.display = 'flex';
+                });
+
+                // Handle chat form submission
+                chatForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const message = chatInput.value.trim();
+                    if (message) {
+                        addUserMessage(message);
+                        chatInput.value = '';
+                        // Process the user's message and respond
+                        processUserMessage(message);
+                    }
+                });
+
+                // Handle suggestion chips
+                document.querySelectorAll('.suggestion-chip').forEach(chip => {
+                    chip.addEventListener('click', function () {
+                        const message = this.textContent;
+                        addUserMessage(message);
+                        processUserMessage(message);
+                    });
+                });
+
+                // Add a user message to the chat
+                function addUserMessage(message) {
+                    const messageElement = document.createElement('div');
+                    messageElement.classList.add('message', 'user-message');
+                    messageElement.textContent = message;
+                    chatMessages.appendChild(messageElement);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+
+                // Add a bot message to the chat
+                function addBotMessage(message) {
+                    const messageElement = document.createElement('div');
+                    messageElement.classList.add('message', 'bot-message');
+                    messageElement.textContent = message;
+                    chatMessages.appendChild(messageElement);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+
+                // Process user message and generate a response
+                function processUserMessage(message) {
+                    // Show typing indicator
+                    const typingIndicator = document.createElement('div');
+                    typingIndicator.classList.add('message', 'bot-message', 'typing-indicator');
+                    typingIndicator.textContent = "...";
+                    chatMessages.appendChild(typingIndicator);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                    // In a real-world implementation, you would call your AI API here
+                    // For now, we'll use our predefined responses with a simulated delay
+                    setTimeout(() => {
+                        // Remove typing indicator
+                        chatMessages.removeChild(typingIndicator);
+
+                        // Get response from our predefined function
+                        let response = getBotResponse(message);
+                        addBotMessage(response);
+
+                        // Optional: Show new suggestion chips based on context
+                        updateSuggestionChips(message);
+                    }, 800);
+
+                    // OPTION FOR REAL API INTEGRATION:
+                    // This is how you would integrate with Claude or OpenAI API in production
+                    /*
+                    fetch('/api/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            prompt: "You are a helpful assistant for a group packing app called PackPal. Help this user based on their message: " + message
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Remove typing indicator
+                        chatMessages.removeChild(typingIndicator);
+                        // Add the AI response
+                        addBotMessage(data.response);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        chatMessages.removeChild(typingIndicator);
+                        addBotMessage("Sorry, I'm having trouble connecting. Please try again later.");
+                    });
+                    */
+                }
+
+                // Update suggestion chips based on conversation context
+                function updateSuggestionChips(lastMessage) {
+                    const lowercaseMessage = lastMessage.toLowerCase();
+
+                    // If user asked about packing for a specific trip type, show related suggestions
+                    if (lowercaseMessage.includes('beach') || lowercaseMessage.includes('tropical')) {
+                        updateChips([
+                            "What about sunscreen?",
+                            "Beach activities?",
+                            "Medication for beach?"
+                        ]);
+                    }
+                    else if (lowercaseMessage.includes('hiking') || lowercaseMessage.includes('camping')) {
+                        updateChips([
+                            "First aid for hiking?",
+                            "Camping gear checklist",
+                            "Weather protection"
+                        ]);
+                    }
+                    else if (lowercaseMessage.includes('winter') || lowercaseMessage.includes('ski')) {
+                        updateChips([
+                            "Cold weather layers?",
+                            "Ski equipment list",
+                            "Winter accessories"
+                        ]);
+                    }
+                    // If user asked about app features
+                    else if (lowercaseMessage.includes('feature') || lowercaseMessage.includes('do')) {
+                        updateChips([
+                            "Role permissions?",
+                            "Progress tracking",
+                            "Create a new trip"
+                        ]);
+                    }
+                    // Default suggestions
+                    else {
+                        updateChips([
+                            "What to pack for beach?",
+                            "How to assign items?",
+                            "Weather recommendations"
+                        ]);
+                    }
+                }
+
+                // Update the suggestion chips with new options
+                function updateChips(suggestions) {
+                    quickSuggestions.innerHTML = '';
+                    suggestions.forEach(suggestion => {
+                        const chip = document.createElement('span');
+                        chip.classList.add('suggestion-chip');
+                        chip.textContent = suggestion;
+                        chip.addEventListener('click', function () {
+                            addUserMessage(this.textContent);
+                            processUserMessage(this.textContent);
+                        });
+                        quickSuggestions.appendChild(chip);
+                    });
+                }
+
+                // Get bot response based on user input (simulating AI responses)
+                function getBotResponse(message) {
+                    const lowercaseMessage = message.toLowerCase();
+
+                    // Greetings
+                    if (lowercaseMessage.includes('hello') || lowercaseMessage.includes('hi') || lowercaseMessage === 'hey') {
+                        return "Hello! How can I help you with PackPal today?";
+                    }
+
+                    // How to create a trip
+                    if (lowercaseMessage.includes('create a trip') || lowercaseMessage.includes('start a trip') || lowercaseMessage.includes('new trip')) {
+                        return "To create a new trip in PackPal: 1) Click the '+' button on your dashboard, 2) Enter your trip details (name, dates, destination), 3) Add group members by email, and 4) Start building your packing list!";
+                    }
+
+                    // Asking about items to pack
+                    if (lowercaseMessage.includes('what to pack') || lowercaseMessage.includes('items for') || lowercaseMessage.includes('packing list')) {
+                        if (lowercaseMessage.includes('beach') || lowercaseMessage.includes('tropical')) {
+                            return "For a beach trip, I'd recommend: swimwear, sunscreen, beach towels, sun hat, flip flops, light clothing, cover-ups, beach games, reusable water bottle, and a waterproof phone case. Need more specific recommendations?";
+                        }
+                        if (lowercaseMessage.includes('hiking') || lowercaseMessage.includes('camping')) {
+                            return "For hiking/camping, essential items include: proper footwear, moisture-wicking clothing, rain gear, navigation tools, first aid kit, emergency shelter, headlamp, food, water, and a multi-tool. Would you like me to suggest more based on your specific trip?";
+                        }
+                        if (lowercaseMessage.includes('winter') || lowercaseMessage.includes('snow') || lowercaseMessage.includes('skiing')) {
+                            return "For a winter trip, pack: thermal base layers, insulated mid-layers, waterproof outer layers, warm hat, gloves, thick socks, winter boots, hand warmers, lip balm, and moisturizer for dry skin. Anything specific you're wondering about?";
+                        }
+                        if (lowercaseMessage.includes('business') || lowercaseMessage.includes('work')) {
+                            return "For a business trip, remember to pack: appropriate business attire, laptop and charger, presentation materials, business cards, portable power bank, travel documents, personal care items, and comfortable shoes for walking between meetings.";
+                        }
+                        return "I'd be happy to help you create a packing list! Could you tell me more about your trip type (beach, hiking, business, etc.) and duration?";
+                    }
+
+                    // Asking about roles
+                    if (lowercaseMessage.includes('role') || lowercaseMessage.includes('permission')) {
+                        return "PackPal has 4 user roles: 1) Owner - can edit everything and manage users, 2) Admin - can edit lists and invite members, 3) Member - can add/check off items, and 4) Viewer - can only view without editing. You can change roles in your trip settings under 'Manage Members'.";
+                    }
+
+                    // Asking about progress tracking
+                    if (lowercaseMessage.includes('progress') || lowercaseMessage.includes('track') || lowercaseMessage.includes('status')) {
+                        return "PackPal's Progress Dashboard shows you: 1) Overall completion percentage, 2) Items by status (not started, in progress, completed), 3) Items by assignee, and 4) Timeline view for multi-day packing. You can access it from any trip page by clicking 'View Progress'.";
+                    }
+
+                    // Pricing questions
+                    if (lowercaseMessage.includes('price') || lowercaseMessage.includes('cost') || lowercaseMessage.includes('subscription')) {
+                        return "PackPal offers a free Basic plan with up to 3 trips and 5 members per trip. Our Premium plan ($4.99/month) provides unlimited trips, members, and advanced features like custom categories and weather-based recommendations. Learn more on our Pricing page!";
+                    }
+
+                    // Weather-based recommendations
+                    if (lowercaseMessage.includes('weather') || lowercaseMessage.includes('forecast') || lowercaseMessage.includes('temperature')) {
+                        return "PackPal Premium can provide weather-based packing recommendations! Just enter your destination and dates, and we'll suggest items based on the forecast. For example, if rain is expected, we'll recommend umbrellas and waterproof gear automatically.";
+                    }
+
+                    // Assignment
+                    if (lowercaseMessage.includes('assign') || lowercaseMessage.includes('responsibility')) {
+                        return "To assign items to group members: 1) Open your packing list, 2) Click the person icon next to any item, 3) Select a group member from the dropdown. You can also filter the list view to see only items assigned to specific people.";
+                    }
+
+                    // Categories
+                    if (lowercaseMessage.includes('categor') || lowercaseMessage.includes('organize') || lowercaseMessage.includes('group items')) {
+                        return "PackPal lets you organize items by categories like Clothing, Electronics, Toiletries, etc. To add a category: 1) Click 'Add Category' at the bottom of your list, 2) Name your category, 3) Add items to it. You can drag and drop to reorder categories too!";
+                    }
+
+                    // Templates
+                    if (lowercaseMessage.includes('template') || lowercaseMessage.includes('preset')) {
+                        return "PackPal offers ready-made templates for common trips like Beach Vacation, Business Trip, Camping Adventure, and more! To use a template: 1) Click 'Use Template' when creating a new trip, 2) Select the template that matches your trip type, 3) Customize as needed.";
+                    }
+
+                    // Mobile app
+                    if (lowercaseMessage.includes('mobile') || lowercaseMessage.includes('app') || lowercaseMessage.includes('phone')) {
+                        return "Yes! PackPal has mobile apps for both iOS and Android. Download from the App Store or Google Play Store to access your packing lists on the go, get notifications, and check off items even when offline.";
+                    }
+
+                    // First aid
+                    if (lowercaseMessage.includes('first aid') || lowercaseMessage.includes('medical') || lowercaseMessage.includes('emergency')) {
+                        return "A good travel first aid kit should include: adhesive bandages, gauze pads, antiseptic wipes, antibiotic ointment, pain relievers, anti-diarrheal medication, tweezers, and any personal medications. For outdoor trips, add insect repellent and blister treatment.";
+                    }
+
+                    // General help/how to use
+                    if (lowercaseMessage.includes('help') || lowercaseMessage.includes('how to use') || lowercaseMessage.includes('tutorial')) {
+                        return "To get started with PackPal: 1) Create an account, 2) Start a new trip, 3) Build your packing list, 4) Invite travel companions, 5) Assign responsibilities, and 6) Track progress as you pack! Check out our video tutorials in the Help Center for visual guides.";
+                    }
+
+                    // Fallback response
+                    return "Thanks for your question! I can help with how to use PackPal, suggest items for your trip, explain features, or provide packing recommendations based on your destination. Could you please provide more details about what you'd like to know?";
+                }
+            });

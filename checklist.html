@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PackPal - Packing Checklist</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f8ff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .checklist-header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c7be5;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: #333;
+            font-weight: 400;
+        }
+
+        .event-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .user-nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: #666;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-link:hover {
+            color: #2c7be5;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e9effd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #2c7be5;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 70px);
+            /* Adjust based on header height */
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .category-list {
+            list-style: none;
+        }
+
+        .category-item {
+            margin-bottom: 10px;
+        }
+
+        .category-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: transparent;
+            color: #555;
+            font-size: 0.95rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn:hover {
+            background-color: #f0f5ff;
+            color: #2c7be5;
+        }
+
+        .category-btn.active {
+            background-color: #e1ebff;
+            color: #2c7be5;
+            font-weight: 500;
+        }
+
+        .category-btn i {
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .back-to-events {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e1ebff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2c7be5;
+            font-size: 1.2rem;
+        }
+
+        .category-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Status Filters */
+        .status-filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 20px;
+            background-color: #f0f0f0;
+            color: #666;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        .filter-btn.active {
+            background-color: #2c7be5;
+            color: white;
+        }
+
+        /* Item List */
+        .item-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .item-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .item-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .checkbox-container {
+            display: inline-block;
+            position: relative;
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+        }
+
+        .checkbox-container input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 22px;
+            width: 22px;
+            background-color: #fff;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .checkbox-container:hover input~.checkmark {
+            border-color: #2c7be5;
+        }
+
+        .checkbox-container input:checked~.checkmark {
+            background-color: #2c7be5;
+            border-color: #2c7be5;
+        }
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        .checkbox-container input:checked~.checkmark:after {
+            display: block;
+        }
+
+        .checkbox-container .checkmark:after {
+            left: 7px;
+            top: 3px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .item-name {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .item-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .assigned-to {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .assigned-dropdown {
+            appearance: none;
+            background-color: #f5f5f5;
+            border: none;
+            border-radius: 5px;
+            padding: 6px 10px;
+            padding-right: 25px;
+            font-size: 0.9rem;
+            color: #555;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 12px;
+        }
+
+        .assigned-dropdown:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(44, 123, 229, 0.2);
+        }
+
+        .status-dropdown {
+            appearance: none;
+            border: none;
+            border-radius: 5px;
+            padding: 6px 12px;
+            padding-right: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 12px;
+        }
+
+        .status-dropdown:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(44, 123, 229, 0.2);
+        }
+
+        .status-to-pack {
+            background-color: #fff8e1;
+            color: #f59e0b;
+        }
+
+        .status-packed {
+            background-color: #e8f5e9;
+            color: #10b981;
+        }
+
+        .status-delivered {
+            background-color: #e3f2fd;
+            color: #2c7be5;
+        }
+
+        .conflict-warning {
+            color: #ef4444;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        /* Add Item Button */
+        .add-item-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background-color: #2c7be5;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(44, 123, 229, 0.2);
+        }
+
+        .add-item-btn:hover {
+            background-color: #1a68d1;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(44, 123, 229, 0.3);
+        }
+
+        /* Add Item Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .modal-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: #777;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #2c7be5;
+            box-shadow: 0 0 0 3px rgba(44, 123, 229, 0.15);
+        }
+
+        select.form-input {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 16px 12px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .cancel-btn {
+            padding: 12px 20px;
+            background-color: #f5f5f5;
+            color: #666;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cancel-btn:hover {
+            background-color: #e8e8e8;
+        }
+
+        .save-btn {
+            padding: 12px 20px;
+            background-color: #2c7be5;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(44, 123, 229, 0.2);
+        }
+
+        .save-btn:hover {
+            background-color: #1a68d1;
+            box-shadow: 0 6px 8px rgba(44, 123, 229, 0.3);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #888;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #ccc;
+        }
+
+        .empty-state h3 {
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .empty-state p {
+            font-size: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .checklist-header {
+                padding: 15px;
+            }
+
+            .event-title {
+                font-size: 1.2rem;
+            }
+
+            .main-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                max-height: 200px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            }
+
+            .sidebar-title {
+                margin-bottom: 10px;
+                padding-bottom: 5px;
+            }
+
+            .category-list {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .category-item {
+                margin-bottom: 5px;
+            }
+
+            .category-btn {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+            }
+
+            .back-to-events {
+                margin-top: 15px;
+                padding-top: 10px;
+            }
+
+            .content-area {
+                padding: 20px 15px;
+            }
+
+            .item-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .item-controls {
+                width: 100%;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="checklist-header">
+        <a href="index.html" class="logo">Pack<span>Pal</span></a>
+        <h1 class="event-title">{{ event_name }}</h1>
+        <div class="user-nav">
+<!--            <a href="dashboard.html" class="nav-link">-->
+<!--                <i class="fas fa-th-large"></i>-->
+<!--                Dashboard-->
+<!--            </a>-->
+            <a href="/dashboard?event={{ event_name }}" class="nav-link">
+                <i class="fas fa-th-large"></i>
+                Dashboard
+            </a>
+            <div class="user-avatar">JD</div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Sidebar with Categories -->
+        <aside class="sidebar">
+            <h2 class="sidebar-title">Packing Categories</h2>
+            <ul class="category-list">
+                <li class="category-item">
+                    <button class="category-btn active" data-category="travel-documents">
+                        <i class="fas fa-passport"></i>
+                        Travel Documents
+                    </button>
+                </li>
+                <li class="category-item">
+                    <button class="category-btn" data-category="clothing">
+                        <i class="fas fa-tshirt"></i>
+                        Clothing
+                    </button>
+                </li>
+                <li class="category-item">
+                    <button class="category-btn" data-category="footwear">
+                        <i class="fas fa-shoe-prints"></i>
+                        Footwear
+                    </button>
+                </li>
+                <li class="category-item">
+                    <button class="category-btn" data-category="toiletries">
+                        <i class="fas fa-toothbrush"></i>
+                        Toiletries & Personal Care
+                    </button>
+                </li>
+                <li class="category-item">
+                    <button class="category-btn" data-category="health">
+                        <i class="fas fa-medkit"></i>
+                        Health & Medications
+                    </button>
+                </li>
+                <li class="category-item">
+                    <button class="category-btn" data-category="electronics">
+                        <i class="fas fa-laptop"></i>
+                        Electronics
+                    </button>
+                </li>
+                <li class="category-item">
+                    <button class="category-btn" data-category="essentials">
+                        <i class="fas fa-suitcase"></i>
+                        Travel Essentials
+                    </button>
+                </li>
+                <li class="category-item">
+                    <button class="category-btn" data-category="optional">
+                        <i class="fas fa-star"></i>
+                        Optional Items
+                    </button>
+                </li>
+            </ul>
+            <div class="back-to-events">
+<!--                <a href="dashboard.html" class="nav-link">-->
+<!--                    <i class="fas fa-arrow-left"></i>-->
+<!--                    Back to Events-->
+<!--                </a>-->
+                <a href="/dashboard?event={{ event_name }}" class="nav-link">
+                    <i class="fas fa-th-large"></i>
+                    Back to Events
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="content-area">
+            <div class="content-header">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-passport"></i>
+                    </div>
+                    <h2 class="category-name">Travel Documents</h2>
+                </div>
+                <button class="add-item-btn" id="open-add-modal">
+                    <i class="fas fa-plus"></i>
+                    Add Item
+                </button>
+            </div>
+
+            <!-- Status Filters -->
+            <div class="status-filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="to-pack">To Pack</button>
+                <button class="filter-btn" data-filter="packed">Packed</button>
+                <button class="filter-btn" data-filter="delivered">Delivered</button>
+            </div>
+
+            <!-- Item List -->
+            <div class="item-list" id="travel-documents">
+                <!-- Item 1 -->
+                <div class="item-card" data-status="to-pack">
+                    <div class="item-info">
+                        <label class="checkbox-container">
+                            <input type="checkbox">
+                            <span class="checkmark"></span>
+                        </label>
+                        <span class="item-name">Passport</span>
+                    </div>
+                    <div class="item-controls">
+                        <div class="assigned-to">
+                            <i class="fas fa-user"></i>
+                            <select class="assigned-dropdown">
+                                <option value="john">John Doe</option>
+                                <option value="sarah">Sarah Williams</option>
+                                <option value="mike">Mike Johnson</option>
+                                <option value="unassigned">Unassigned</option>
+                            </select>
+                        </div>
+                        <select class="status-dropdown status-to-pack">
+                            <option value="to-pack" selected>To Pack</option>
+                            <option value="packed">Packed</option>
+                            <option value="delivered">Delivered</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="item-card" data-status="packed">
+                    <div class="item-info">
+                        <label class="checkbox-container">
+                            <input type="checkbox" checked>
+                            <span class="checkmark"></span>
+                        </label>
+                        <span class="item-name">Visa Documents</span>
+                    </div>
+                    <div class="item-controls">
+                        <div class="assigned-to">
+                            <i class="fas fa-user"></i>
+                            <select class="assigned-dropdown">
+                                <option value="john">John Doe</option>
+                                <option value="sarah" selected>Sarah Williams</option>
+                                <option value="mike">Mike Johnson</option>
+                                <option value="unassigned">Unassigned</option>
+                            </select>
+                        </div>
+                        <select class="status-dropdown status-packed">
+                            <option value="to-pack">To Pack</option>
+                            <option value="packed" selected>Packed</option>
+                            <option value="delivered">Delivered</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Item 3 with conflict -->
+                <div class="item-card" data-status="to-pack">
+                    <div class="item-info">
+                        <label class="checkbox-container">
+                            <input type="checkbox">
+                            <span class="checkmark"></span>
+                        </label>
+                        <div>
+                            <span class="item-name">Travel Insurance</span>
+                            <div class="conflict-warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Item assigned to multiple users
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-controls">
+                        <div class="assigned-to">
+                            <i class="fas fa-user"></i>
+                            <select class="assigned-dropdown">
+                                <option value="john">John Doe</option>
+                                <option value="sarah">Sarah Williams</option>
+                                <option value="mike" selected>Mike Johnson</option>
+                                <option value="unassigned">Unassigned</option>
+                            </select>
+                        </div>
+                        <select class="status-dropdown status-to-pack">
+                            <option value="to-pack" selected>To Pack</option>
+                            <option value="packed">Packed</option>
+                            <option value="delivered">Delivered</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="item-card" data-status="delivered">
+                    <div class="item-info">
+                        <label class="checkbox-container">
+                            <input type="checkbox" checked>
+                            <span class="checkmark"></span>
+                        </label>
+                        <span class="item-name">Hotel Reservation</span>
+                    </div>
+                    <div class="item-controls">
+                        <div class="assigned-to">
+                            <i class="fas fa-user"></i>
+                            <select class="assigned-dropdown">
+                                <option value="john" selected>John Doe</option>
+                                <option value="sarah">Sarah Williams</option>
+                                <option value="mike">Mike Johnson</option>
+                                <option value="unassigned">Unassigned</option>
+                            </select>
+                        </div>
+                        <select class="status-dropdown status-delivered">
+                            <option value="to-pack">To Pack</option>
+                            <option value="packed">Packed</option>
+                            <option value="delivered" selected>Delivered</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State (Initially Hidden) -->
+            <div class="empty-state" style="display: none;">
+                <i class="fas fa-box-open"></i>
+                <h3>No items in this category yet</h3>
+                <p>Start adding items to your packing list by clicking the "Add Item" button above.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Item Modal -->
+    <div class="modal" id="add-item-modal">
+        <div class="modal-content">
+            <h2 class="modal-title">Add New Item</h2>
+            <button class="close-modal" id="close-modal">&times;</button>
+
+            <form id="add-item-form">
+                <div class="form-group">
+                    <label for="item-name" class="form-label">Item Name</label>
+                    <input type="text" id="item-name" class="form-input" placeholder="Enter item name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="item-category" class="form-label">Category</label>
+                    <select id="item-category" class="form-input">
+                        <option value="travel-documents">Travel Documents</option>
+                        <option value="clothing">Clothing</option>
+                        <option value="footwear">Footwear</option>
+                        <option value="toiletries">Toiletries & Personal Care</option>
+                        <option value="health">Health & Medications</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="essentials">Travel Essentials</option>
+                        <option value="optional">Optional Items</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="assigned-user" class="form-label">Assign To</label>
+                    <select id="assigned-user" class="form-input">
+                        <option value="john">John Doe</option>
+                        <option value="sarah">Sarah Williams</option>
+                        <option value="mike">Mike Johnson</option>
+                        <option value="unassigned">Unassigned</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="item-status" class="form-label">Status</label>
+                    <select id="item-status" class="form-input">
+                        <option value="to-pack">To Pack</option>
+                        <option value="packed">Packed</option>
+                        <option value="delivered">Delivered</option>
+                    </select>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="cancel-btn" id="cancel-add">Cancel</button>
+                    <button type="submit" class="save-btn">Add Item</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+       // DOM Elements
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const addItemButton = document.getElementById('open-add-modal');
+        const closeModalButton = document.getElementById('close-modal');
+        const cancelAddButton = document.getElementById('cancel-add');
+        const addItemModal = document.getElementById('add-item-modal');
+        const addItemForm = document.getElementById('add-item-form');
+        const itemList = document.querySelector('.item-list');
+        const emptyState = document.querySelector('.empty-state');
+
+        const categoryIcons = {
+            'travel-documents': 'fas fa-passport',
+            'clothing': 'fas fa-tshirt',
+            'footwear': 'fas fa-shoe-prints',
+            'toiletries': 'fas fa-pump-soap',
+            'health': 'fas fa-pills',
+            'electronics': 'fas fa-laptop',
+            'essentials': 'fas fa-suitcase',
+            'optional': 'fas fa-star'
+        };
+
+        // Sample data - would be replaced with server data in production
+        let currentCategory = 'travel-documents';
+        let currentFilter = 'all';
+        let currentUser = 'Alex Smith'; // Simulated logged-in user
+
+        const packingItems = {
+            'travel-documents': [
+                { id: 1, name: 'Passport', assignedTo: 'Alex Smith', status: 'packed' },
+                { id: 2, name: 'Flight Tickets', assignedTo: 'Jamie Lee', status: 'to-pack' },
+                { id: 3, name: 'Hotel Reservation', assignedTo: 'Alex Smith', status: 'delivered' },
+                { id: 4, name: 'Travel Insurance', assignedTo: 'Pat Johnson', status: 'to-pack' }
+            ],
+            'clothing': [
+                { id: 5, name: 'T-shirts (5)', assignedTo: 'Alex Smith', status: 'to-pack' },
+                { id: 6, name: 'Pants (2)', assignedTo: 'Jamie Lee', status: 'packed' },
+                { id: 7, name: 'Swimwear', assignedTo: 'Jamie Lee', status: 'to-pack' },
+                { id: 8, name: 'Rain Jacket', assignedTo: 'Alex Smith', status: 'packed' }
+            ],
+            'footwear': [
+                { id: 9, name: 'Walking Shoes', assignedTo: 'Pat Johnson', status: 'packed' },
+                { id: 10, name: 'Sandals', assignedTo: 'Jamie Lee', status: 'to-pack' }
+            ],
+            'toiletries': [
+                { id: 11, name: 'Toothbrush', assignedTo: 'Alex Smith', status: 'to-pack' },
+                { id: 12, name: 'Shampoo', assignedTo: 'Jamie Lee', status: 'packed' },
+                { id: 13, name: 'Sunscreen', assignedTo: 'Pat Johnson', status: 'to-pack' }
+            ],
+            'health': [
+                { id: 14, name: 'Pain Relievers', assignedTo: 'Alex Smith', status: 'packed' },
+                { id: 15, name: 'Prescription Medications', assignedTo: 'Jamie Lee', status: 'to-pack' },
+                { id: 16, name: 'First Aid Kit', assignedTo: 'Pat Johnson', status: 'delivered' }
+            ],
+            'electronics': [
+                { id: 17, name: 'Phone Charger', assignedTo: 'Alex Smith', status: 'to-pack' },
+                { id: 18, name: 'Camera', assignedTo: 'Jamie Lee', status: 'packed' },
+                { id: 19, name: 'Power Bank', assignedTo: 'Alex Smith', status: 'to-pack' },
+                { id: 20, name: 'Travel Adapter', assignedTo: 'Pat Johnson', status: 'packed' }
+            ],
+            'essentials': [
+                { id: 21, name: 'Water Bottle', assignedTo: 'Alex Smith', status: 'packed' },
+                { id: 22, name: 'Day Backpack', assignedTo: 'Jamie Lee', status: 'to-pack' }
+            ],
+            'optional': [
+                { id: 23, name: 'Travel Pillow', assignedTo: 'Pat Johnson', status: 'to-pack' },
+                { id: 24, name: 'Book', assignedTo: 'Alex Smith', status: 'packed' }
+            ]
+        };
+
+        // Users for assignment dropdown
+        const users = [
+            'Alex Smith',
+            'Jamie Lee',
+            'Pat Johnson',
+            'Sam Taylor'
+        ];
+
+        // Duplicate item check - simulates conflict alert functionality
+        const duplicateItemCheck = {
+            'travel-documents': {
+                'Visa': ['Alex Smith', 'Jamie Lee'] // Example of a conflict
+            }
+        };
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function () {
+            // Set up event listeners
+            setupEventListeners();
+
+            // Load initial category
+            loadCategory(currentCategory);
+
+            // Set active category in sidebar
+            setActiveCategory(currentCategory);
+
+            // Set active filter
+            setActiveFilter(currentFilter);
+        });
+
+        function setupEventListeners() {
+            // Category button click events
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const category = this.dataset.category;
+                    currentCategory = category;
+                    loadCategory(category);
+                    setActiveCategory(category);
+                });
+            });
+
+            // Filter button click events
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const filter = this.dataset.filter;
+                    currentFilter = filter;
+                    applyFilter(filter);
+                    setActiveFilter(filter);
+                });
+            });
+
+            // Add item button click
+            if (addItemButton) {
+                addItemButton.addEventListener('click', function () {
+                    openAddItemModal();
+                });
+            }
+
+            // Close modal button click
+            if (closeModalButton) {
+                closeModalButton.addEventListener('click', function () {
+                    closeAddItemModal();
+                });
+            }
+
+            // Cancel add button click
+            if (cancelAddButton) {
+                cancelAddButton.addEventListener('click', function () {
+                    closeAddItemModal();
+                });
+            }
+
+            // Add item form submission
+            if (addItemForm) {
+                addItemForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    addNewItem();
+                });
+            }
+
+            // Close modal when clicking outside of it
+            window.addEventListener('click', function (event) {
+                if (event.target === addItemModal) {
+                    closeAddItemModal();
+                }
+            });
+        }
+
+        function loadCategory(category) {
+            // Clear current items
+            itemList.innerHTML = '';
+
+            const items = packingItems[category] || [];
+
+            // Show empty state if no items
+            if (items.length === 0) {
+                emptyState.style.display = 'flex';
+            } else {
+                emptyState.style.display = 'none';
+
+                // Apply current filter to items
+                const filteredItems = filterItems(items, currentFilter);
+
+                // Render filtered items
+                filteredItems.forEach(item => {
+                    renderItem(item);
+                });
+            }
+
+            // Update category heading
+            const categoryHeading = document.getElementById('category-heading');
+            if (categoryHeading) {
+                const formattedCategory = category.split('-').map(word =>
+                    word.charAt(0).toUpperCase() + word.slice(1)
+                ).join(' ');
+                categoryHeading.textContent = formattedCategory;
+            }
+
+            // Update category icon
+            const categoryIcon = document.getElementById('category-icon');
+            if (categoryIcon) {
+                categoryIcon.className = categoryIcons[category] || 'fas fa-list';
+            }
+        }
+
+        function renderItem(item) {
+            const itemElement = document.createElement('div');
+            itemElement.className = 'item-card';
+            itemElement.dataset.itemId = item.id;
+
+            // Status class for color coding
+            itemElement.classList.add(`status-${item.status}`);
+
+            // Check for conflicts (if same item is assigned to multiple people)
+            let conflictAlert = '';
+            if (duplicateItemCheck[currentCategory] && duplicateItemCheck[currentCategory][item.name]) {
+                const assignees = duplicateItemCheck[currentCategory][item.name];
+                if (assignees.length > 1) {
+                    conflictAlert = `
+                <div class="conflict-alert">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Item assigned to multiple users
+                </div>
+            `;
+                }
+            }
+
+            // Generate status icon based on status
+            let statusIcon;
+            switch (item.status) {
+                case 'to-pack':
+                    statusIcon = '<i class="far fa-square"></i>';
+                    break;
+                case 'packed':
+                    statusIcon = '<i class="fas fa-box"></i>';
+                    break;
+                case 'delivered':
+                    statusIcon = '<i class="fas fa-check-circle"></i>';
+                    break;
+                default:
+                    statusIcon = '<i class="far fa-square"></i>';
+            }
+
+            itemElement.innerHTML = `
+        <div class="item-header">
+            <h3 class="item-name">${statusIcon} ${item.name}</h3>
+            ${conflictAlert}
+        </div>
+        <div class="item-details">
+            <div class="item-assignment">
+                <label>Assigned to:</label>
+                <select class="assigned-to" data-item-id="${item.id}">
+                    ${users.map(user => `
+                        <option value="${user}" ${user === item.assignedTo ? 'selected' : ''}>
+                            ${user}
+                        </option>
+                    `).join('')}
+                </select>
+            </div>
+            <div class="item-status">
+                <label>Status:</label>
+                <select class="status-select" data-item-id="${item.id}">
+                    <option value="to-pack" ${item.status === 'to-pack' ? 'selected' : ''}>To Pack</option>
+                    <option value="packed" ${item.status === 'packed' ? 'selected' : ''}>Packed</option>
+                    <option value="delivered" ${item.status === 'delivered' ? 'selected' : ''}>Delivered</option>
+                </select>
+            </div>
+        </div>
+    `;
+
+            itemList.appendChild(itemElement);
+
+            // Add event listeners to the newly created item
+            const statusSelect = itemElement.querySelector('.status-select');
+            const assignedToSelect = itemElement.querySelector('.assigned-to');
+
+            statusSelect.addEventListener('change', function () {
+                updateItemStatus(item.id, this.value);
+            });
+
+            assignedToSelect.addEventListener('change', function () {
+                updateItemAssignment(item.id, this.value);
+            });
+        }
+
+        function updateItemStatus(itemId, newStatus) {
+            // Find the item in our data model and update its status
+            const items = packingItems[currentCategory];
+            const item = items.find(i => i.id === parseInt(itemId));
+
+            if (item) {
+                item.status = newStatus;
+
+                // Update UI to reflect the change
+                const itemCard = document.querySelector(`.item-card[data-item-id="${itemId}"]`);
+                if (itemCard) {
+                    // Remove all status classes
+                    itemCard.classList.remove('status-to-pack', 'status-packed', 'status-delivered');
+                    // Add the new one
+                    itemCard.classList.add(`status-${newStatus}`);
+                }
+
+                // Simulate real-time updates
+                simulateRealtimeUpdate(item, 'status');
+            }
+
+            // Re-apply filter if needed
+            if (currentFilter !== 'all') {
+                applyFilter(currentFilter);
+            }
+        }
+
+        function updateItemAssignment(itemId, newAssignee) {
+            // Find the item in our data model and update its assignment
+            const items = packingItems[currentCategory];
+            const item = items.find(i => i.id === parseInt(itemId));
+
+            if (item) {
+                item.assignedTo = newAssignee;
+
+                // Simulate real-time updates
+                simulateRealtimeUpdate(item, 'assignment');
+
+                // Check for conflicts
+                checkForConflicts(item);
+            }
+        }
+
+        function simulateRealtimeUpdate(item, updateType) {
+            console.log(`Real-time update: Item "${item.name}" ${updateType} changed`);
+            // In a real app, this would emit an event using Flask-SocketIO
+            // Example: socket.emit('item_updated', { itemId: item.id, updateType: updateType, newValue: item.status });
+
+            // Show a temporary notification for the simulated real-time update
+            const notification = document.createElement('div');
+            notification.className = 'realtime-notification';
+            notification.innerHTML = `
+        <i class="fas fa-sync-alt"></i>
+        ${item.name} ${updateType === 'status' ? 'status updated to ' + item.status : 'reassigned to ' + item.assignedTo}
+    `;
+
+            document.body.appendChild(notification);
+
+            // Remove notification after a few seconds
+            setTimeout(() => {
+                notification.classList.add('fade-out');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 500);
+            }, 3000);
+        }
+
+        function checkForConflicts(item) {
+            // This is a placeholder for conflict detection logic
+            // In a real app, this would check the database for conflicting assignments
+            console.log(`Checking for conflicts with item: ${item.name}`);
+        }
+
+        function filterItems(items, filter) {
+            if (filter === 'all') {
+                return items;
+            }
+
+            return items.filter(item => item.status === filter);
+        }
+
+        function applyFilter(filter) {
+            loadCategory(currentCategory);
+        }
+
+        function setActiveCategory(category) {
+            // Remove active class from all category buttons
+            categoryButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Add active class to current category button
+            const activeButton = document.querySelector(`.category-btn[data-category="${category}"]`);
+            if (activeButton) {
+                activeButton.classList.add('active');
+            }
+        }
+
+        function setActiveFilter(filter) {
+            // Remove active class from all filter buttons
+            filterButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Add active class to current filter button
+            const activeButton = document.querySelector(`.filter-btn[data-filter="${filter}"]`);
+            if (activeButton) {
+                activeButton.classList.add('active');
+            }
+        }
+
+        function openAddItemModal() {
+            // Reset form fields
+            if (addItemForm) {
+                addItemForm.reset();
+
+                // Set the category dropdown to current category
+                const categorySelect = document.getElementById('new-item-category');
+                if (categorySelect) {
+                    categorySelect.value = currentCategory;
+                }
+
+                // Set the assigned to dropdown to current user
+                const assignedSelect = document.getElementById('new-item-assigned');
+                if (assignedSelect) {
+                    assignedSelect.value = currentUser;
+                }
+            }
+
+            // Show modal
+            addItemModal.style.display = 'flex';
+        }
+
+        function closeAddItemModal() {
+            // Hide modal
+            addItemModal.style.display = 'none';
+        }
+
+        function addNewItem() {
+            // Get form values
+            const nameInput = document.getElementById('new-item-name');
+            const categorySelect = document.getElementById('new-item-category');
+            const assignedSelect = document.getElementById('new-item-assigned');
+
+            if (!nameInput || !categorySelect || !assignedSelect) return;
+
+            const name = nameInput.value.trim();
+            const category = categorySelect.value;
+            const assignedTo = assignedSelect.value;
+
+            if (name === '') {
+                alert('Please enter an item name');
+                return;
+            }
+
+            // Create new item
+            const newItem = {
+                id: generateUniqueId(),
+                name: name,
+                assignedTo: assignedTo,
+                status: 'to-pack'
+            };
+
+            // Add to data model
+            if (!packingItems[category]) {
+                packingItems[category] = [];
+            }
+
+            packingItems[category].push(newItem);
+
+            // Close modal
+            closeAddItemModal();
+
+            // If we're on the same category, refresh the view
+            if (category === currentCategory) {
+                loadCategory(currentCategory);
+            } else {
+                // Optionally switch to the new category
+                currentCategory = category;
+                setActiveCategory(category);
+                loadCategory(category);
+            }
+
+            // Simulate real-time update
+            simulateRealtimeUpdate(newItem, 'added');
+        }
+
+        function generateUniqueId() {
+            // Simple function to generate a unique ID
+            // In a real app, this would be handled by the server
+            return Math.floor(Math.random() * 10000) + 100;
+        }
+
+        // Mobile sidebar toggle
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const sidebar = document.querySelector('.sidebar');
+
+        if (sidebarToggle && sidebar) {
+            sidebarToggle.addEventListener('click', function () {
+                sidebar.classList.toggle('show');
+
+                // Update toggle icon
+                const icon = this.querySelector('i');
+                if (icon) {
+                    if (sidebar.classList.contains('show')) {
+                        icon.className = 'fas fa-times';
+                    } else {
+                        icon.className = 'fas fa-bars';
+                    }
+                }
+            });
+        }
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function (event) {
+            if (window.innerWidth <= 768) {
+                const isClickInsideSidebar = sidebar.contains(event.target);
+                const isClickOnToggle = sidebarToggle.contains(event.target);
+
+                if (!isClickInsideSidebar && !isClickOnToggle && sidebar.classList.contains('show')) {
+                    sidebar.classList.remove('show');
+
+                    // Update toggle icon
+                    const icon = sidebarToggle.querySelector('i');
+                    if (icon) {
+                        icon.className = 'fas fa-bars';
+                    }
+                }
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function () {
+            if (window.innerWidth > 768 && sidebar.classList.contains('show')) {
+                sidebar.classList.remove('show');
+
+                // Update toggle icon
+                const icon = sidebarToggle.querySelector('i');
+                if (icon) {
+                    icon.className = 'fas fa-bars';
+                }
+            }
+        });
+    </script>

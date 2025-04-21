@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - PackPal</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --success-color: #4cc9f0;
+            --text-color: #333;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --hover-color: #f1f3f9;
+        }
+
+        .dark-mode {
+            --primary-color: #4361ee;
+            --secondary-color: #4895ef;
+            --success-color: #4cc9f0;
+            --text-color: #e0e0e0;
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --border-color: #333;
+            --hover-color: #252525;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 20px 0;
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .logo {
+            padding: 0 20px 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .logo h2 {
+            margin-left: 10px;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .nav-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background-color: var(--hover-color);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .nav-item.active {
+            background-color: var(--hover-color);
+            border-left: 4px solid var(--primary-color);
+            font-weight: 600;
+        }
+
+        .nav-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            margin-left: 250px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border 0.2s;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .toggle-label {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(26px);
+        }
+
+        .theme-options {
+            display: flex;
+            gap: 15px;
+        }
+
+        .theme-option {
+            flex: 1;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            gap: 8px;
+        }
+
+        .theme-option.light {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .theme-option.dark {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        .theme-option.selected {
+            border-color: var(--primary-color);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-pic {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 600;
+            margin-right: 20px;
+        }
+
+        .upload-btn {
+            padding: 8px 15px;
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-color);
+        }
+
+        .upload-btn:hover {
+            background-color: var(--hover-color);
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-bottom: 1px solid var(--border-color);
+                border-right: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-suitcase fa-2x" style="color: var(--primary-color);"></i>
+                <h2>PackPal</h2>
+            </div>
+            <a href="/index" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-list-check"></i>
+                <span>Packing Lists</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Groups</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-calendar"></i>
+                <span>Trips</span>
+            </a>
+            <a href="#" class="nav-item active">
+                <i class="fas fa-gear"></i>
+                <span>Settings</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-question-circle"></i>
+                <span>Help</span>
+            </a>
+            <a href="#" class="nav-item" style="margin-top: auto; color: #d9534f;">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <div>
+                    <h1>Settings</h1>
+                    <p>Manage your account and application preferences</p>
+                </div>
+            </div>
+
+            <!-- Profile Settings -->
+            <div class="card">
+                <h2>Profile Settings</h2>
+                <div class="profile-header">
+                    <div class="profile-pic">
+                        JS
+                    </div>
+                    <div>
+                        <p>Upload a new profile picture</p>
+                        <button class="upload-btn">
+                            <i class="fas fa-upload"></i> Choose File
+                        </button>
+                        <!-- This would connect to backend file upload -->
+                    </div>
+                </div>
+                <form id="profile-form">
+                    <div class="form-group">
+                        <label for="fullname">Full Name</label>
+                        <input type="text" id="fullname" value="John Smith">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" value="john.smith@example.com" readonly>
+                        <small style="color: var(--secondary-color);">Contact support to change your email</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="current-password">Current Password</label>
+                        <input type="password" id="current-password" placeholder="Enter current password">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-password">New Password</label>
+                        <input type="password" id="new-password" placeholder="Enter new password">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm New Password</label>
+                        <input type="password" id="confirm-password" placeholder="Confirm new password">
+                    </div>
+                    <button type="button" class="btn" onclick="saveProfile()">Update Profile</button>
+                </form>
+            </div>
+
+            <!-- Notification Preferences -->
+            <div class="card">
+                <h2>Notification Preferences</h2>
+                <div class="toggle-container">
+                    <label class="toggle-label">
+                        <i class="fas fa-envelope"></i> Email Notifications
+                        <p style="font-weight: normal; font-size: 14px; margin-top: 4px; color: #666;">Receive updates
+                            about your trips and packing lists</p>
+                    </label>
+                    <label class="switch">
+                        <input type="checkbox" checked id="email-notifications">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-container">
+                    <label class="toggle-label">
+                        <i class="fas fa-bell"></i> Event Reminders
+                        <p style="font-weight: normal; font-size: 14px; margin-top: 4px; color: #666;">Get reminders
+                            about upcoming trips</p>
+                    </label>
+                    <label class="switch">
+                        <input type="checkbox" checked id="event-reminders">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-container">
+                    <label class="toggle-label">
+                        <i class="fas fa-clipboard-check"></i> Item Status Updates
+                        <p style="font-weight: normal; font-size: 14px; margin-top: 4px; color: #666;">Be notified when
+                            group members update item status</p>
+                    </label>
+                    <label class="switch">
+                        <input type="checkbox" id="item-updates">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <button type="button" class="btn" onclick="saveNotifications()">Save Preferences</button>
+            </div>
+
+            <!-- Theme Switcher -->
+            <div class="card">
+                <h2>Theme Preferences</h2>
+                <div class="theme-options">
+                    <div class="theme-option light selected" onclick="setTheme('light')">
+                        <i class="fas fa-sun"></i> Light Mode
+                    </div>
+                    <div class="theme-option dark" onclick="setTheme('dark')">
+                        <i class="fas fa-moon"></i> Dark Mode
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme switching functionality
+        function setTheme(theme) {
+            const body = document.body;
+            const lightOption = document.querySelector('.theme-option.light');
+            const darkOption = document.querySelector('.theme-option.dark');
+            
+            if (theme === 'dark') {
+                body.classList.add('dark-mode');
+                lightOption.classList.remove('selected');
+                darkOption.classList.add('selected');
+                localStorage.setItem('packpal-theme', 'dark');
+            } else {
+                body.classList.remove('dark-mode');
+                darkOption.classList.remove('selected');
+                lightOption.classList.add('selected');
+                localStorage.setItem('packpal-theme', 'light');
+            }
+        }
+
+        // Initialize theme from localStorage
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('packpal-theme');
+            if (savedTheme === 'dark') {
+                setTheme('dark');
+            }
+        });
+
+        // Mock save functions
+        function saveProfile() {
+            // This would connect to a backend API
+            alert('Profile updated successfully!');
+        }
+
+        function saveNotifications() {
+            // This would connect to a backend API
+            const emailNotifs = document.getElementById('email-notifications').checked;
+            const eventReminders = document.getElementById('event-reminders').checked;
+            const itemUpdates = document.getElementById('item-updates').checked;
+            
+            // Data to send to backend:
+            const prefsData = {
+                emailNotifications: emailNotifs,
+                eventReminders: eventReminders,
+                itemStatusUpdates: itemUpdates
+            };
+            
+            console.log('Preferences to save:', prefsData);
+            alert('Notification preferences saved!');
+        }
+    </script>
+</body>
+
+</html>

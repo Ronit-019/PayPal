@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PackPal - Dashboard</title>
+    <style>
+        /* Base styles from signup.html */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f8ff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .dashboard-header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c7be5;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: #333;
+            font-weight: 400;
+        }
+
+        .user-nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e9effd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #2c7be5;
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            flex: 1;
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Tabs */
+        .tabs-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #666;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: #2c7be5;
+            border-bottom-color: #2c7be5;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Events Grid */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        /* Event Card */
+        .event-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(44, 123, 229, 0.15);
+        }
+
+        .event-name {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .event-owner {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .progress-container {
+            margin-bottom: 20px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #2c7be5;
+            border-radius: 5px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: #2c7be5;
+            color: white;
+            box-shadow: 0 4px 6px rgba(44, 123, 229, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: #1a68d1;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(44, 123, 229, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: #f0f5ff;
+            color: #2c7be5;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e1ebff;
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        /* Create Event Form */
+        .create-event-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #2c7be5;
+            box-shadow: 0 0 0 3px rgba(44, 123, 229, 0.15);
+        }
+
+        select.form-input {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 16px 12px;
+        }
+
+        /* Create Event Button */
+        .create-event-btn-container {
+            text-align: right;
+            margin-top: 30px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-header {
+                padding: 15px;
+            }
+
+            .dashboard-content {
+                padding: 20px 15px;
+            }
+
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tab {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="dashboard-header">
+        <div class="logo-container">
+            <a href="index.html" class="logo">Pack<span>Pal</span></a>
+        </div>
+        <nav class="user-nav">
+            <div class="user-profile">
+                <div class="user-avatar">JD</div>
+                <span>John Doe</span>
+            </div>
+        </nav>
+    </header>
+
+    <main class="dashboard-content">
+        <nav class="tabs-container" role="tablist">
+            <button class="tab active" role="tab" aria-selected="true" data-target="my-events">My Events</button>
+            <button class="tab" role="tab" aria-selected="false" data-target="create-event">Create Event</button>
+        </nav>
+
+        <section class="tab-content active" id="my-events">
+            <div class="events-grid">
+                <!-- Event Card 1 -->
+                <div class="event-card">
+                    <h2 class="event-name">Goa Trip</h2>
+                    <p class="event-owner">Created by: You</p>
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span>Packing Progress</span>
+                            <span>65%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 65%"></div>
+                        </div>
+                    </div>
+<!--                    <a href="#" class="btn btn-primary btn-full">View Checklist</a>-->
+<!--                    <a href="/checklist" class="btn btn-primary btn-full">View Checklist</a>-->
+                    <a href="/checklist?event=Goa%20Trip" class="btn btn-primary btn-full">View Checklist</a>
+                </div>
+
+                <!-- Event Card 2 -->
+                <div class="event-card">
+                    <h2 class="event-name">College Fest</h2>
+                    <p class="event-owner">Created by: Sarah Williams</p>
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span>Packing Progress</span>
+                            <span>30%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 30%"></div>
+                        </div>
+                    </div>
+<!--                    <a href="#" class="btn btn-primary btn-full">View Checklist</a>-->
+<!--                    <a href="/checklist" class="btn btn-primary btn-full">View Checklist</a>-->
+                <a href="/checklist?event=College%20Fest" class="btn btn-primary btn-full">View Checklist</a>
+                </div>
+
+                <!-- Event Card 3 -->
+                <div class="event-card">
+                    <h2 class="event-name">Family Vacation</h2>
+                    <p class="event-owner">Created by: Mike Johnson</p>
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span>Packing Progress</span>
+                            <span>80%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 80%"></div>
+                        </div>
+                    </div>
+<!--                    <a href="#" class="btn btn-primary btn-full">View Checklist</a>-->
+<!--                    <a href="/checklist" class="btn btn-primary btn-full">View Checklist</a>-->
+                    <a href="/checklist?event=goa-trip" class="btn btn-primary btn-full">View Checklist</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="tab-content" id="create-event">
+            <div class="create-event-container">
+                <h2 class="form-title">Create New Event</h2>
+                <form id="create-event-form">
+                    <div class="form-group">
+                        <label for="event-name" class="form-label">Event Name</label>
+                        <input type="text" id="event-name" class="form-input" placeholder="e.g., Goa Trip" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="invite-users" class="form-label">Invite Users (Optional)</label>
+                        <input type="email" id="invite-users" class="form-input"
+                            placeholder="Enter email addresses separated by commas">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="user-role" class="form-label">Assign Role</label>
+                        <select id="user-role" class="form-input">
+                            <option value="owner">Owner</option>
+                            <option value="admin">Admin</option>
+                            <option value="member">Member</option>
+                            <option value="viewer">Viewer</option>
+                        </select>
+                    </div>
+
+                    <div class="create-event-btn-container">
+                        <button type="submit" class="btn btn-primary">Create Event</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs
+                document.querySelectorAll('.tab').forEach(t => {
+                    t.classList.remove('active');
+                    t.setAttribute('aria-selected', 'false');
+                });
+
+                // Hide all tab content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+
+                // Activate clicked tab
+                tab.classList.add('active');
+                tab.setAttribute('aria-selected', 'true');
+
+                // Show corresponding content
+                const targetId = tab.getAttribute('data-target');
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
+
+        // Form submission
+        document.getElementById('create-event-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Get form values
+            const eventName = document.getElementById('event-name').value;
+            const inviteUsers = document.getElementById('invite-users').value;
+            const userRole = document.getElementById('user-role').value;
+
+            // Here you would normally send this data to your backend
+            console.log('Creating event:', {
+                name: eventName,
+                invitees: inviteUsers.split(',').map(email => email.trim()),
+                role: userRole,
+                categories: [
+                    'Travel Documents',
+                    'Clothing',
+                    'Footwear',
+                    'Toiletries & Personal Care',
+                    'Health & Medications',
+                    'Electronics',
+                    'Travel Essentials',
+                    'Optional Items'
+                ]
+            });
+
+            // Reset form
+            this.reset();
+
+            // Switch back to My Events tab
+            document.querySelector('[data-target="my-events"]').click();
+
+            // For demo: Add a new event card
+            addNewEventCard(eventName);
+        });
+
+        // Demo function to add a new event card
+        function addNewEventCard(eventName) {
+    const eventsGrid = document.querySelector('.events-grid');
+
+    const eventCard = document.createElement('div');
+    eventCard.className = 'event-card';
+
+    eventCard.innerHTML = `
+        <h2 class="event-name">${eventName}</h2>
+        <p class="event-owner">Created by: You</p>
+        <div class="progress-container">
+            <div class="progress-label">
+                <span>Packing Progress</span>
+                <span>0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 0%"></div>
+            </div>
+        </div>
+        <a href="/checklist?event=${encodeURIComponent(eventName)}" class="btn btn-primary btn-full">View Checklist</a>
+    `;
+
+    eventsGrid.prepend(eventCard);
+}
+
+    </script>
+</body>
+
+</html>

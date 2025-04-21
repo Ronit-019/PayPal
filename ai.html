@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PackPal - AI Support Chat</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --success-color: #4cc9f0;
+            --text-color: #333;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --hover-color: #f1f3f9;
+            --assistant-bg: #f0f7ff;
+            --user-bg: #e6f2ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Chat widget styling */
+        .chat-widget-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .chat-widget-button:hover {
+            transform: scale(1.05);
+            background-color: var(--secondary-color);
+        }
+
+        .chat-widget {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            height: 500px;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            z-index: 999;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+        }
+
+        .chat-widget.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        .chat-header {
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-header-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-header-title h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .chat-header-title .bot-avatar {
+            width: 30px;
+            height: 30px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+        }
+
+        .chat-close {
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .chat-body {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .chat-message {
+            display: flex;
+            gap: 10px;
+            max-width: 85%;
+        }
+
+        .chat-message.assistant {
+            align-self: flex-start;
+        }
+
+        .chat-message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .message-avatar.assistant {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .message-avatar.user {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .message-content {
+            padding: 12px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .message-content.assistant {
+            background-color: var(--assistant-bg);
+            border-top-left-radius: 4px;
+        }
+
+        .message-content.user {
+            background-color: var(--user-bg);
+            border-top-right-radius: 4px;
+            text-align: right;
+        }
+
+        .chat-footer {
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .chat-send {
+            background-color: var(--primary-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .chat-send:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .chat-send:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .typing-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0 8px;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--text-color);
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: typing-animation 1.5s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes typing-animation {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-4px);
+            }
+        }
+
+        .quick-questions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 10px 0;
+        }
+
+        .quick-question {
+            background-color: var(--hover-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 15px;
+            border-radius: 15px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .quick-question:hover {
+            background-color: var(--assistant-bg);
+            border-color: var(--primary-color);
+        }
+
+        .welcome-message {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #666;
+        }
+
+        /* Demo Page Content */
+        .demo-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .demo-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .demo-header h1 {
+            font-size: 28px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .demo-header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .demo-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .demo-card h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .demo-card p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .code-block {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .chat-widget {
+                width: calc(100% - 40px);
+                right: 20px;
+                bottom: 90px;
+            }
+
+            .chat-widget-button {
+                right: 20px;
+                bottom: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div style="display: flex; justify-content: center; margin-top: 20px; margin-bottom: 30px;">
+    <a href="/index" class="home-button" style="
+        background-color: #4361ee;
+        color: white;
+        padding: 10px 24px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        box-shadow: 0 3px 10px rgba(67, 97, 238, 0.3);
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    " onmouseover="this.style.backgroundColor='#3f37c9'; this.style.boxShadow='0 4px 14px rgba(63, 55, 201, 0.4)'"
+    onmouseout="this.style.backgroundColor='#4361ee'; this.style.boxShadow='0 3px 10px rgba(67, 97, 238, 0.3)'">
+        ⬅ Back to Home
+    </a>
+</div>
+
+    <!-- Demo Content - Would be replaced with your actual app -->
+    <div class="demo-content">
+        <div class="demo-header">
+            <h1>PackPal - Group Packing Assistant</h1>
+            <p>AI-powered chat support implementation</p>
+        </div>
+
+        <div class="demo-card">
+            <h2>About this Demo</h2>
+            <p>This is a demonstration of the AI chat support bot for PackPal. The chat widget in the bottom-right
+                corner shows a fully functional frontend interface for the chatbot.</p>
+            <p>In a real implementation, this would be integrated with Claude or OpenAI's API to provide intelligent
+                responses about packing tips, app usage, and more.</p>
+        </div>
+
+        <div class="demo-card">
+            <h2>Implementation Notes</h2>
+            <p>The chat interface includes:</p>
+            <ul style="margin-left: 20px; line-height: 1.6;">
+                <li>Floating chat button that expands into a full chat interface</li>
+                <li>Message history with visual distinction between user and assistant</li>
+                <li>Quick question buttons for common inquiries</li>
+                <li>Typing indicator for better UX</li>
+                <li>Full responsive design for mobile and desktop</li>
+            </ul>
+        </div>
+
+<!--        <div class="demo-card">-->
+<!--            <h2>Backend Integration Example (Python/Flask)</h2>-->
+<!--            <pre class="code-block">-->
+<!--# Flask route to handle chat requests-->
+<!--@app.route('/api/chat', methods=['POST'])-->
+<!--def chat_with_ai():-->
+<!--    data = request.json-->
+<!--    user_message = data.get('message', '')-->
+<!--    -->
+<!--    # System prompt that defines the assistant's purpose-->
+<!--    system_prompt = """-->
+<!--    You are PackPal's helpful support assistant for a group travel packing app.-->
+<!--    Your job is to help users with:-->
+<!--    1. How to use features of the PackPal app-->
+<!--    2. Suggest items to pack based on destinations, weather, or trip type-->
+<!--    3. Explain roles and progress tracking in group packing lists-->
+<!--    4. Provide packing tips and advice-->
+<!--    -->
+<!--    Keep responses friendly, concise, and focused on packing and travel.-->
+<!--    If users ask about topics unrelated to travel or packing, gently-->
+<!--    redirect them to how you can help with their trip planning.-->
+<!--    """-->
+<!--    -->
+<!--    # Call to Claude or OpenAI API (example using Anthropic's Claude)-->
+<!--    try:-->
+<!--        import anthropic-->
+<!--        client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))-->
+<!--        -->
+<!--        response = client.messages.create(-->
+<!--            model="claude-3-opus-20240229",-->
+<!--            max_tokens=500,-->
+<!--            system=system_prompt,-->
+<!--            messages=[-->
+<!--                {"role": "user", "content": user_message}-->
+<!--            ]-->
+<!--        )-->
+<!--        -->
+<!--        assistant_message = response.content[0].text-->
+<!--        return jsonify({"message": assistant_message})-->
+<!--        -->
+<!--    except Exception as e:-->
+<!--        app.logger.error(f"Error calling AI API: {str(e)}")-->
+<!--        return jsonify({"message": "Sorry, I'm having trouble connecting right now. Please try again later."}), 500-->
+<!--</pre>-->
+<!--        </div>-->
+
+<!--        <div class="demo-card">-->
+<!--            <h2>JavaScript Frontend Integration</h2>-->
+<!--            <pre class="code-block">-->
+<!--// Function to send message to backend API-->
+<!--async function sendMessageToAI(message) {-->
+<!--    try {-->
+<!--        const response = await fetch('/api/chat', {-->
+<!--            method: 'POST',-->
+<!--            headers: {-->
+<!--                'Content-Type': 'application/json',-->
+<!--            },-->
+<!--            body: JSON.stringify({ message: message }),-->
+<!--        });-->
+<!--        -->
+<!--        if (!response.ok) {-->
+<!--            throw new Error('Network response was not ok');-->
+<!--        }-->
+<!--        -->
+<!--        const data = await response.json();-->
+<!--        return data.message;-->
+<!--    } catch (error) {-->
+<!--        console.error('Error sending message to AI:', error);-->
+<!--        return "Sorry, I'm having trouble connecting right now. Please try again later.";-->
+<!--    }-->
+<!--}-->
+<!--</pre>-->
+<!--        </div>-->
+<!--    </div>-->
+
+    <!-- Chat Widget Button -->
+    <div class="chat-widget-button" id="chat-widget-button">
+        <i class="fas fa-comments fa-lg"></i>
+    </div>
+
+    <!-- Chat Widget Interface -->
+    <div class="chat-widget" id="chat-widget">
+        <div class="chat-header">
+            <div class="chat-header-title">
+                <div class="bot-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3>PackPal Assistant</h3>
+            </div>
+            <div class="chat-close" id="chat-close">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+
+        <div class="chat-body" id="chat-body">
+            <div class="welcome-message">
+                <strong>👋 Welcome to PackPal Support!</strong>
+                <p>I'm your packing assistant. How can I help you today?</p>
+            </div>
+
+            <div class="quick-questions">
+                <button class="quick-question" onclick="askQuickQuestion('How do I create a group packing list?')">
+                    How do I create a group packing list?
+                </button>
+                <button class="quick-question" onclick="askQuickQuestion('What should I pack for a beach vacation?')">
+                    What should I pack for a beach vacation?
+                </button>
+                <button class="quick-question" onclick="askQuickQuestion('How do I assign items to group members?')">
+                    How do I assign items to group members?
+                </button>
+                <button class="quick-question"
+                    onclick="askQuickQuestion('Can you help with packing for cold weather?')">
+                    Can you help with packing for cold weather?
+                </button>
+            </div>
+
+            <!-- Chat messages will be added here -->
+            <div class="chat-message assistant">
+                <div class="message-avatar assistant">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-content assistant">
+                    Hi! I'm your PackPal assistant. I can help with packing suggestions, explain app features, or
+                    provide travel tips. What can I help you with today?
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-footer">
+            <input type="text" class="chat-input" id="chat-input" placeholder="Type your message..." autocomplete="off">
+            <button class="chat-send" id="chat-send" disabled>
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const chatButton = document.getElementById('chat-widget-button');
+            const chatWidget = document.getElementById('chat-widget');
+            const chatClose = document.getElementById('chat-close');
+            const chatInput = document.getElementById('chat-input');
+            const chatSend = document.getElementById('chat-send');
+            const chatBody = document.getElementById('chat-body');
+
+            // Toggle chat widget
+            chatButton.addEventListener('click', function () {
+                chatWidget.classList.toggle('active');
+                if (chatWidget.classList.contains('active')) {
+                    chatInput.focus();
+                }
+            });
+
+            chatClose.addEventListener('click', function () {
+                chatWidget.classList.remove('active');
+            });
+
+            // Enable/disable send button based on input
+            chatInput.addEventListener('input', function () {
+                chatSend.disabled = chatInput.value.trim() === '';
+            });
+
+            // Send message on Enter key
+            chatInput.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' && chatInput.value.trim() !== '') {
+                    sendMessage();
+                }
+            });
+
+            // Send button click
+            chatSend.addEventListener('click', function () {
+                if (chatInput.value.trim() !== '') {
+                    sendMessage();
+                }
+            });
+
+            // Sample responses for demo purposes
+            const demoResponses = {
+                "how do i create a group packing list?": "To create a group packing list in PackPal:\n\n1. Go to the Dashboard and click '+ New List'\n2. Select 'Group List' as the type\n3. Enter a name for your trip and select dates\n4. Add members by email or username\n5. Click 'Create List' and start adding items!\n\nYou can then assign items to specific people and track packing progress together.",
+
+                "what should i pack for a beach vacation?": "For a beach vacation, I recommend packing:\n\n• Swimwear (2-3 sets)\n• Beach towel or blanket\n• Sunscreen (SPF 30+ and waterproof)\n• Sunglasses and hat\n• Flip flops/sandals\n• Light, breathable clothing\n• A light jacket for evenings\n• Beach bag\n• Water bottle\n• After-sun lotion\n\nWould you like more specific recommendations based on your destination?",
+
+                "how do i assign items to group members?": "To assign items to group members:\n\n1. Open your group packing list\n2. Find the item you want to assign\n3. Click the 'Assign' button (person icon)\n4. Select the group member from the dropdown\n5. Click 'Save'\n\nThey'll receive a notification and the item will appear in their personal list. You can also reassign items anytime if plans change.",
+
+                "can you help with packing for cold weather?": "For cold weather packing, focus on layers:\n\n• Base layer: Thermal underwear/long johns\n• Mid layer: Fleece/wool sweaters\n• Outer layer: Insulated waterproof jacket\n• Warm socks (preferably wool)\n• Insulated boots\n• Hat, scarf, and gloves\n• Hand/foot warmers for extreme cold\n• Moisturizer (cold air is drying)\n• Lip balm\n\nCheck the specific forecast for your destination so you can adjust accordingly!",
+
+                "default": "I'm happy to help with that! As PackPal's assistant, I can provide packing suggestions, explain app features, or give travel tips. To give you the most helpful response, could you provide a bit more detail about what you're looking for?"
+            };
+
+            // Function to handle sending messages
+            function sendMessage() {
+                const message = chatInput.value.trim();
+                addMessage('user', message);
+
+                // Clear input and scroll to bottom
+                chatInput.value = '';
+                chatSend.disabled = true;
+                scrollToBottom();
+
+                // Show typing indicator
+                showTypingIndicator();
+
+                // In a real implementation, we would call the AI API here
+                // For demo, we'll simulate a response after a delay
+                setTimeout(() => {
+                    removeTypingIndicator();
+
+                    // Get demo response based on message content
+                    const lowercaseMsg = message.toLowerCase();
+                    let response = demoResponses.default;
+
+                    // Check for matching demo responses
+                    Object.keys(demoResponses).forEach(key => {
+                        if (lowercaseMsg.includes(key)) {
+                            response = demoResponses[key];
+                        }
+                    });
+
+                    addMessage('assistant', response);
+                    scrollToBottom();
+                }, 1500);
+            }
+
+            // Function for quick question buttons
+            window.askQuickQuestion = function (question) {
+                chatInput.value = question;
+                chatSend.disabled = false;
+                sendMessage();
+            };
+
+            // Add message to chat
+            function addMessage(role, text) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `chat-message ${role}`;
+
+                const avatar = document.createElement('div');
+                avatar.className = `message-avatar ${role}`;
+
+                const icon = document.createElement('i');
+                icon.className = role === 'assistant' ? 'fas fa-robot' : 'fas fa-user';
+                avatar.appendChild(icon);
+
+                const content = document.createElement('div');
+                content.className = `message-content ${role}`;
+                content.innerText = text;
+
+                messageDiv.appendChild(avatar);
+                messageDiv.appendChild(content);
+
+                chatBody.appendChild(messageDiv);
+            }
+
+            // Show typing indicator
+            function showTypingIndicator() {
+                const indicatorDiv = document.createElement('div');
+                indicatorDiv.className = 'chat-message assistant typing-indicator-container';
+                indicatorDiv.id = 'typing-indicator';
+
+                const avatar = document.createElement('div');
+                avatar.className = 'message-avatar assistant';
+
+                const icon = document.createElement('i');
+                icon.className = 'fas fa-robot';
+                avatar.appendChild(icon);
+
+                const content = document.createElement('div');
+                content.className = 'message-content assistant typing-indicator';
+
+                for (let i = 0; i < 3; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = 'typing-dot';
+                    content.appendChild(dot);
+                }
+
+                indicatorDiv.appendChild(avatar);
+                indicatorDiv.appendChild(content);
+
+                chatBody.appendChild(indicatorDiv);
+                scrollToBottom();
+            }
+
+            // Remove typing indicator
+            function removeTypingIndicator() {
+                const indicator = document.getElementById('typing-indicator');
+                if (indicator) {
+                    indicator.remove();
+                }
+            }
+
+            // Scroll chat to bottom
+            function scrollToBottom() {
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+        });
+    </script>
+</body>
+
+</html>
